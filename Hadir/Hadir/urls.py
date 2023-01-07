@@ -18,6 +18,7 @@ from django.urls import path, include
 from HadirApp import views  # . = current folder
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 urlpatterns = [
 
     path('admin/', admin.site.urls),
@@ -75,6 +76,19 @@ urlpatterns = [
 
 
     path('Hadir/logout', views.LogoutUser, name="LogoutUser"),
+
+
+    path('Hadir/reset_password/',
+         auth_views.PasswordResetView.as_view(), name="reset_password"),
+
+    path('Hadir/reset_password_sent/',
+         auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
+
+    path('Hadir/reset_password/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+
+    path('Hadir/reset_password_complete/',
+         auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 
 
     path('Hadir/main', views.mainPage, name="mainPage"),
