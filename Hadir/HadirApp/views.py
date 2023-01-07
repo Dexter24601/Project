@@ -364,8 +364,9 @@ def clas(request, class_id, class_name):
 def attendance(request, class_name, class_id):
 
     today = date.today()
+    currentClass = Class.objects.get(class_id=class_id)
     print(today)
-    students = Student.objects.all()
+    students = Student.objects.filter(classes=currentClass)
 
     # print(request.method)
     # print(Attendance.objects.all())

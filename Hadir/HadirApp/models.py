@@ -30,11 +30,11 @@ class Student(models.Model):
     student_id = models.CharField(
         primary_key=True, max_length=8, validators=[RegexValidator(r'^(4)(\d{7})$')])
 
-    student_absence = models.IntegerField(default=0)
+    # student_absence = models.IntegerField(default=0)
     reg_date = models.DateTimeField('date registered',  auto_now_add=True)
     # null=True, on_delete=models.SET_NULL
     classes = models.ManyToManyField(Class)
-    precense = models.BooleanField(default=False)
+    # precense = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
