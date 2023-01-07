@@ -123,9 +123,9 @@ a:hover {
 }
 
 
-footer {
-    /* position: absolute; */
-    width: 100%;
+/* footer { */
+/* position: absolute; */
+/* width: 100%;
     left: 0;
     bottom: 0;
     display: flex;
@@ -135,8 +135,8 @@ footer {
     padding: 10px 0 10px 0;
     font-family: Arial, Helvetica, sans-serif;
     background-color: #ECF0F1;
-    border-top-left-radius: 7px;
-}
+    border-top-left-radius: 7px; */
+/* } */
 
 footer p {
 

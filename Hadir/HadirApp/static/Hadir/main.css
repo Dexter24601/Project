@@ -42,20 +42,13 @@ h2 {
     width: 100%;
     position: -webkit-sticky;
     /* Safari */
-    position: sticky;
-    top: 0;
+    /* position: sticky; */
+    /* top: 0; */
     background-color: #fff;
+    min-height: 100vh;
+    position: relative;
 }
 
-/* .grad-bar {
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
-    background-size: 400% 400%;
-    -webkit-animation: gradbar 15s ease infinite;
-    -moz-animation: gradbar 15s ease infinite;
-    animation: gradbar 15s ease infinite;
-} */
 
 /* NAVIGATION */
 
@@ -215,77 +208,13 @@ input {
     cursor: pointer;
 }
 
-/* #mobile-menu a {
-    padding-left: 20px;
-    color: #3498db;
-    font-size: 19px;
-    text-decoration: none;
-} */
 
-/* 
-#mobile-menu.is-active .bar:nth-child(2) {
-    opacity: 0;
-}
-
-#mobile-menu.is-active .bar:nth-child(1) {
-    -webkit-transform: translateY(8px) rotate(45deg);
-    -ms-transform: translateY(8px) rotate(45deg);
-    -o-transform: translateY(8px) rotate(45deg);
-    transform: translateY(8px) rotate(45deg);
-}
-
-*/
 #mobile-menu.is-active .bar:nth-child(3) {
     -webkit-transform: translateY(-8px) rotate(-45deg);
     -ms-transform: translateY(-8px) rotate(-45deg);
     -o-transform: translateY(-8px) rotate(-45deg);
     transform: translateY(-8px) rotate(-45deg);
 }
-
-
-/* KEYFRAME ANIMATIONS */
-/* 
-@-webkit-keyframes gradbar {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-}
-
-@-moz-keyframes gradbar {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-}
-
-@keyframes gradbar {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-} */
 
 
 
@@ -314,11 +243,7 @@ input {
         font-size: 0.8rem;
     }
 
-    /* a {
-        font-size: 1rem;
-    } */
 
-    /* MOBILE NAVIGATION */
 
     .navbar ul {
         display: flex;
@@ -340,14 +265,6 @@ input {
         padding-left: 15px;
     }
 
-    /* 
-    .navbar li:first-child {
-        margin-top: 50px;
-    } */
-
-    /* .navbar li a {
-        font-size: 1rem;
-    } */
 
     .menu-toggle,
     .bar {
@@ -391,13 +308,8 @@ input {
 
 footer {
     width: 100%;
-    /* height: 100px; */
-    left: 0;
+    position: absolute;
     bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
     padding: 10px 0 10px 0;
     font-family: Arial, Helvetica, sans-serif;
     background-color: #ECF0F1;
