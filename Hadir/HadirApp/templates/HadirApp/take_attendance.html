@@ -8,11 +8,7 @@
 <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-<style>
-    footer {
-        bottom: 0;
-    }
-</style>
+
 
 <body>
     <div class="container">
@@ -28,7 +24,6 @@
             <div>
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <p>Enter Students</p>
                     {% for student in students%}
                     <label for="{{student}}">{{student}}</label>
                     <input type="checkbox" name="student" value="{{student}}">
