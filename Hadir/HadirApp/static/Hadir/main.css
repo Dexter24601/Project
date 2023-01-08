@@ -306,10 +306,21 @@ input {
 
 }
 
+.form {
+
+    margin: auto;
+    width: 50%;
+    background: #dcdcdca1;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px grey;
+
+}
+
 footer {
     width: 100%;
     position: absolute;
-    /* bottom: 0; */
+    bottom: 0;
     padding: 10px 0 10px 0;
     font-family: Arial, Helvetica, sans-serif;
     background-color: #ECF0F1;

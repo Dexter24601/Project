@@ -13,7 +13,7 @@
         <h1> Create new class</h1>
         <div class="info-cont">
 
-            <form action="Create_class" method="POST">
+            <form class="form" action="Create_class" method="POST">
                 {% csrf_token %}
                 <label for="">Section ID</label>
                 <input type="text" id="classID" name="classID" maxlength="3" required="required">
