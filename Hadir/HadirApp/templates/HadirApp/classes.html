@@ -1,6 +1,12 @@
 {% extends 'HadirApp/base.html' %}
 
 {% block main_content %}
+<style>
+    footer {
+        position: absolute;
+        bottom: 0;
+    }
+</style>
 
 <p>Welcome {{request.user}}</p> <br>
 {% if theClasses %}
