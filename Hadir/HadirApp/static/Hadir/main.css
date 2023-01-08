@@ -114,7 +114,7 @@ h2 {
 .features {
     width: 100%;
     height: auto;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
     display: flex;
     padding: 50px 20px;
     justify-content: space-around;
@@ -135,6 +135,52 @@ h2 {
 .feature-container img {
     width: 100%;
     margin-bottom: 15px;
+}
+
+
+.cont {
+    display: flex;
+    margin-bottom: 5%;
+    text-decoration: none;
+}
+
+#btn {
+    margin: auto;
+    width: 30%;
+    height: 5vh;
+    padding-top: 2px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: rgb(39 125 178);
+    color: white;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 3vh;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 10px 0 rgb(14, 103, 158);
+}
+
+#btn p {
+    text-decoration: none;
+    color: #fff;
+}
+
+/* 
+.input {
+    margin: 10vh 0;
+} */
+
+#btn:hover {
+    background: rgb(33, 120, 174);
+}
+
+#btn:active {
+    box-shadow: 0 0 transparent;
+    position: relative;
+    top: 10px;
+    /* box-shadow: inse */
 }
 
 /* SEARCH FUNCTION */
@@ -239,9 +285,9 @@ input {
         font-size: 1rem;
     }
 
-    p {
+    /* p {
         font-size: 0.8rem;
-    }
+    } */
 
 
 
