@@ -30,7 +30,7 @@ class Student(models.Model):
     student_id = models.CharField(
         primary_key=True, max_length=8, validators=[RegexValidator(r'^(4)(\d{7})$')])
 
-    student_absence = models.IntegerField(default=0)
+    # student_absence = models.IntegerField(default=0)
     reg_date = models.DateTimeField('date registered',  auto_now_add=True)
     # null=True, on_delete=models.SET_NULL
     classes = models.ManyToManyField(Class)
@@ -62,3 +62,9 @@ class Attendance(models.Model):
 
     def __str__(self):
         return (f'{self.clas}-{self.presence_date}')
+
+
+class Absence(models.Model):
+    info = models.ForeignKey(Attendance, null=True, on_delete=models.SET_NULL)
+    student = models.ManyToManyField(Student)
+    student_absence = models.IntegerField(default=0)
