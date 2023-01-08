@@ -440,12 +440,13 @@ def attendanceResult(request, class_name, class_id):
         prestudents = st.student.all()
     print(f' students: {prestudents}')
 
-    # {'prestudents': prestudents}
-    # return render(request, 'HadirApp/results.html')
+    currentClass = Class.objects.get(class_id=class_id)
+    students = Student.objects.filter(
+        classes=currentClass)
+    abcentStudents = [
+        student for student in students if student not in prestudents]
 
-    # else:
-    #     return render('Hadir/404')
-    return render(request, 'HadirApp/results.html', {'prestudents': prestudents})
+    return render(request, 'HadirApp/results.html', {'prestudents': prestudents, 'abcentStudents': abcentStudents})
     # old way
 
     # template = loader.get_template('HadirApp/welcome.html')
