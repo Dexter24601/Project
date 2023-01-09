@@ -8,17 +8,6 @@ html {
 
 }
 
-
-
-.container {
-    margin: 30px auto;
-    border: 1px transparent;
-    border-radius: 5px;
-    width: 90%;
-    background: #fff;
-    padding: 10px;
-}
-
 .container h1 {
     color: rgb(69, 69, 198);
     margin-bottom: 20px;
@@ -28,6 +17,8 @@ html {
     justify-content: start;
     white-space: wrap;
     font-size: 14px;
+    display: flex;
+    flex-direction: column;
 }
 
 .info-cont input {
@@ -36,9 +27,7 @@ html {
     margin-top: 10px;
 }
 
-/* students-num {
-    height: 50px;
-} */
+
 
 select {
     color: rgb(0, 0, 0);

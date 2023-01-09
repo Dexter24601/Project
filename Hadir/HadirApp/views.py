@@ -366,32 +366,45 @@ def attendance(request, class_name, class_id):
     today = date.today()
     currentClass = Class.objects.get(class_id=class_id)
     print(today)
-    students = Student.objects.filter(classes=currentClass)
+    students = Student.objects.filter(
+        classes=currentClass)  # all student in the class
 
     # print(request.method)
     # print(Attendance.objects.all())
     if request.method == "POST":
         studentsNames = request.POST.getlist('student')
-        prestudents = []
+        prestudents = []    # present student in the class
         for name in studentsNames:
             prestudents.append(Student.objects.get(name=name))
 
-        clas = Class.objects.get(class_id=class_id)
-        print(f'class: {clas} ')
-        if Attendance.objects.filter(presence_date=today, clas=clas).exists():
+        print(f'class: {currentClass} ')
+
+        if Attendance.objects.filter(presence_date=today, clas=currentClass).exists():
             print("Exist (Attendance is Already done)")
-            day = Attendance.objects.get(presence_date=today, clas=clas)
+            day = Attendance.objects.get(
+                presence_date=today, clas=currentClass)
             print(day)
             for st in prestudents:
 
+                # st.student_absence.add(1)
                 day.student.add(st)
                 day.save()
                 print(f'{st} Marked As Present!')
+
+            abcentStudents = [
+                student for student in students if student not in prestudents]
+
+            for student in abcentStudents:
+                print(f" Student {student} is Abcent")
+
+                student.student_absence += 1
+                student.save()
+
             return redirect('./Results')
 
         else:
             day = Attendance.objects.create(
-                presence_date=today, clas=clas)
+                presence_date=today, clas=currentClass)
             day.save()
             print(f'{day} CREATED!')
 
@@ -400,31 +413,17 @@ def attendance(request, class_name, class_id):
                 day.student.add(st)
                 day.save()
                 print(f'{st} Marked As Present!')
+
+            abcentStudents = [
+                student for student in students if student not in prestudents]
+
+            for student in abcentStudents:
+                print(f" Student {student} is Abcent")
+
+                student.student_absence += 1
+                student.save()
+
             return redirect('./Results')
-            #
-            #     for day in presnt:
-            #         day.student.add(prestudents)
-            # else:
-            #     presnt = Attendance.objects.filter(
-            #         presence_date=today)
-            #     # print(f'presnt: {presnt}')
-            #     for day in presnt:
-            #         day.student.add(prestudents)
-            # st = Attendance.objects.get(presence_date=today)
-            # st.student.add(student)
-            # st.save()
-
-        return render(request, 'HadirApp/take_attendance.html', {'prestudents': prestudents})
-    # return render(request, 'HadirApp/take_attendance.html')
-
-    # for student in Student.objects.all():
-    #     if Attendance.objects.filter(student=student, presence_date=today).exists():
-    #         student.precense = True
-    #         student.save()
-
-    # present = Attendance.objects.filter(st)
-    # for st in Student.objects.filter(student):
-    #     print(st)
 
     context = {'students': students,
                'class_name': class_name, 'class_id': class_id}
@@ -441,12 +440,13 @@ def attendanceResult(request, class_name, class_id):
         prestudents = st.student.all()
     print(f' students: {prestudents}')
 
-    # {'prestudents': prestudents}
-    # return render(request, 'HadirApp/results.html')
+    currentClass = Class.objects.get(class_id=class_id)
+    students = Student.objects.filter(
+        classes=currentClass)
+    abcentStudents = [
+        student for student in students if student not in prestudents]
 
-    # else:
-    #     return render('Hadir/404')
-    return render(request, 'HadirApp/results.html', {'prestudents': prestudents})
+    return render(request, 'HadirApp/results.html', {'prestudents': prestudents, 'abcentStudents': abcentStudents})
     # old way
 
     # template = loader.get_template('HadirApp/welcome.html')

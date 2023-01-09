@@ -9,7 +9,7 @@ html {
 
 #container {
     display: flex;
-    margin-top: 10%;
+    margin: 7%;
     align-items: center;
     justify-content: center;
 
@@ -19,9 +19,9 @@ html {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 320px;
-    height: 375px;
-    padding: 10px;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 65px;
     border: 1px solid #ffffff;
     background-color: #fff;
     align-items: center;
@@ -70,21 +70,19 @@ html {
 
 }
 
-/* .input:hover {
-    background-color: #c8c8c8;
-} */
 
 button {
     display: flex;
-    width: 40%;
+    /* width: 40%; */
     margin-top: 15px;
     justify-content: center;
-    padding: 7px;
+    padding: 10px 25px;
+    /* padding-right: 10px; */
     border: 1px solid transparent;
     border-radius: 3px;
     background: #3498DB;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 500;
     text-align: center;
     color: #FFF;
@@ -101,42 +99,11 @@ button:hover {
 
 }
 
-/* button:active {
-    box-shadow: 0 0 transparent;
-    position: relative;
-    top: 10px;
-} */
-
-/* a {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: small;
-    position: relative;
-    top: 2%;
-    color: #838383;
-    cursor: pointer;
-    text-decoration: none;
-
-} */
 
 a:hover {
     color: #16669b;
 }
 
-
-footer {
-    /* position: absolute; */
-    width: 100%;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    padding: 10px 0 10px 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #ECF0F1;
-    border-top-left-radius: 7px;
-}
 
 footer p {
 
@@ -169,8 +136,5 @@ footer p span {
         border-radius: 8px;
         /* overflow: initial; */
     }
-
-
-
 
 }

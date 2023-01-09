@@ -79,10 +79,10 @@ urlpatterns = [
 
 
     path('Hadir/reset_password/',
-         auth_views.PasswordResetView.as_view(), name="reset_password"),
+         auth_views.PasswordResetView.as_view(template_name='HadirApp/password_reset.html'), name="reset_password"),
 
     path('Hadir/reset_password_sent/',
-         auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
+         auth_views.PasswordResetDoneView.as_view(template_name='HadirApp/password_reset_sent.html'), name="password_reset_done"),
 
     path('Hadir/reset_password/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),

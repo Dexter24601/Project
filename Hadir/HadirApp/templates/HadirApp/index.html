@@ -9,7 +9,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hadir</title>
     <link rel="stylesheet" href="{% static 'Hadir/main.css' %}">
+    <style>
+        footer {
+            position: absolute;
+            bottom: auto;
+        }
 
+        .nav-wrapper {
+            min-height: 0 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -62,7 +71,18 @@
                 <h2>Attendance Tracking</h2>
                 <p>our website allows you to moniter the Attandance information readily and clearness.</p>
             </div>
+
         </section>
+
+        <a class="cont" href="register">
+
+            <button type="submit" id="btn" class="input">
+                <p>Join Now</p>
+            </button>
+        </a>
+
+
+
     </div>
 
     <footer>
@@ -72,16 +92,27 @@
         </p>
     </footer>
     <script>
-        $("#search-icon").click(function () {
-            $(".nav").toggleClass("search");
-            $(".nav").toggleClass("no-search");
-            $(".search-input").toggleClass("search-active");
-        });
 
-        $('.menu-toggle').click(function () {
-            $(".nav").toggleClass("mobile-nav");
-            $(this).toggleClass("is-active");
-        });
+        const btn = document.querySelector('#btn');
+
+        btn.addEventListener('click', (event) => {
+
+            return 'http:localhost:8000'
+
+        })
+
+
+        // $("#search-icon").click(function () {
+        //     $(".nav").toggleClass("search");
+        //     $(".nav").toggleClass("no-search");
+        //     $(".search-input").toggleClass("search-active");
+        // });
+
+        // $('.menu-toggle').click(function () {
+        //     $(".nav").toggleClass("mobile-nav");
+        //     $(this).toggleClass("is-active");
+        // });
+
 
     </script>
 </body>

@@ -62,3 +62,9 @@ class Attendance(models.Model):
 
     def __str__(self):
         return (f'{self.clas}-{self.presence_date}')
+
+
+class Absence(models.Model):
+    info = models.ForeignKey(Attendance, null=True, on_delete=models.SET_NULL)
+    student = models.ManyToManyField(Student)
+    student_absence = models.IntegerField(default=0)

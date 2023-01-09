@@ -4,16 +4,29 @@
 
 {% load static %}
 
+<style>
+    footer {
+        position: absolute;
+        bottom: 0;
+    }
+</style>
 <h1>Present Students</h1>
 <ul>
     {% for student in prestudents %}
-    <li>
+    <li style="color: rgb(28, 188, 81);">
         {{student}}
     </li>
     {% endfor %}
 </ul>
 
-
+<h1>Abcent Students</h1>
+<ul>
+    {% for student in abcentStudents %}
+    <li style="color: brown;">
+        {{student}}
+    </li>
+    {% endfor %}
+</ul>
 
 
 {% endblock %}
