@@ -9,7 +9,6 @@ html {
 
 #container {
     display: flex;
-    margin: 7%;
     align-items: center;
     justify-content: center;
 

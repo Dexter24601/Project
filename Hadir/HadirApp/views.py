@@ -7,7 +7,7 @@ from .forms import RegisterForm
 from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Student, Class, Image, Attendance
+from .models import Student, Class, Image, Attendance, Absence
 
 from datetime import date
 
@@ -383,6 +383,9 @@ def attendance(request, class_name, class_id):
             print("Exist (Attendance is Already done)")
             day = Attendance.objects.get(
                 presence_date=today, clas=currentClass)
+
+            # Absence.objects.filter(info=day, student=name)
+
             print(day)
             for st in prestudents:
 
@@ -397,8 +400,8 @@ def attendance(request, class_name, class_id):
             for student in abcentStudents:
                 print(f" Student {student} is Abcent")
 
-                student.student_absence += 1
-                student.save()
+                # student.student_absence += 1
+                # student.save()
 
             return redirect('./Results')
 
@@ -420,8 +423,8 @@ def attendance(request, class_name, class_id):
             for student in abcentStudents:
                 print(f" Student {student} is Abcent")
 
-                student.student_absence += 1
-                student.save()
+                # student.student_absence += 1
+                # student.save()
 
             return redirect('./Results')
 
