@@ -397,12 +397,48 @@ def attendance(request, class_name, class_id):
             abcentStudents = [
                 student for student in students if student not in prestudents]
 
+            """for student in abcentStudents:
+
+
+                # student = Student.objects.get(name=student)
+                if Absence.objects.filter(info=day, student=student).exists():
+
+                    print(f"student {student} is already marked absent")
+                    pass
+
+                    # name.add(student)
+                    # name.save()
+                elif Absence.objects.filter(info=day).exists():
+                    absence = Absence.objects.get(info=day)
+                    absence.student.add(student)
+                    print(f" Student {student} is Absent")
+                else:
+                    absence = Absence.objects.create(
+                        info=day)
+                    absence.student.add(student)
+                    absence.save()
+                    print(f"created: {absence}")
+                    print(f" Student {student} is Absent")
+                    # student.student_absence += 1
+                    # student.save()
+
+                absenceCounter = Student.objects.get(name=student)
+                absenceCounter.student_absence = +1
+                print(absenceCounter.student_absence) """
+
             for student in abcentStudents:
                 print(f" Student {student} is Abcent")
-
-                # student.student_absence += 1
-                # student.save()
-
+                if Absence.objects.filter(student=student, clas=currentClass).exists():
+                    absent = Absence.objects.get(
+                        student=student, clas=currentClass)
+                    absent.counter += 1
+                    print(absent.counter)
+                    absent.save()
+                else:
+                    absent = Absence.objects.create(
+                        student=student, clas=currentClass)
+                    absent.counter += 1
+                    absent.save()
             return redirect('./Results')
 
         else:
@@ -422,7 +458,16 @@ def attendance(request, class_name, class_id):
 
             for student in abcentStudents:
                 print(f" Student {student} is Abcent")
-
+                if Absence.objects.filter(student=student, clas=currentClass).exists():
+                    absent = Absence.objects.get(
+                        student=student, clas=currentClass)
+                    absent.counter = + 1
+                    absent.save()
+                else:
+                    absent = Absence.objects.create(
+                        student=student, clas=currentClass)
+                    absent.counter = + 1
+                    absent.save()
                 # student.student_absence += 1
                 # student.save()
 
