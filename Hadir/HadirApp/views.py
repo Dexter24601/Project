@@ -7,7 +7,7 @@ from .forms import RegisterForm
 from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Student, Class, Image, Attendance, Absence
+from .models import Student, Class, Image, Attendance, Absence, Date
 
 from datetime import date
 
@@ -365,7 +365,7 @@ def attendance(request, class_name, class_id):
 
     today = date.today()
     currentClass = Class.objects.get(class_id=class_id)
-    print(today)
+
     students = Student.objects.filter(
         classes=currentClass)  # all student in the class
 
@@ -373,20 +373,24 @@ def attendance(request, class_name, class_id):
     # print(Attendance.objects.all())
     if request.method == "POST":
         studentsNames = request.POST.getlist('student')
+        #  Student.objects.filter(id=)
         prestudents = []    # present student in the class
         for name in studentsNames:
             prestudents.append(Student.objects.get(name=name))
-
+        print('')
+        print(f'Date: {today}')
+        print("------------------------------")
         print(f'class: {currentClass} ')
+        print("------------------------------")
 
         if Attendance.objects.filter(presence_date=today, clas=currentClass).exists():
-            print("Exist (Attendance is Already done)")
+            print("Exist (Attendance is Already took)")
             day = Attendance.objects.get(
                 presence_date=today, clas=currentClass)
 
             # Absence.objects.filter(info=day, student=name)
 
-            print(day)
+            print(f'Attandance for: {day}')
             for st in prestudents:
 
                 # st.student_absence.add(1)
@@ -425,20 +429,36 @@ def attendance(request, class_name, class_id):
                 absenceCounter = Student.objects.get(name=student)
                 absenceCounter.student_absence = +1
                 print(absenceCounter.student_absence) """
-
+            print("------------------------------")
             for student in abcentStudents:
-                print(f" Student {student} is Abcent")
+
+                if Date.objects.filter(date=today).exists():
+                    DATE = Date.objects.get(date=today)
+                    pass
+                else:
+                    DATE = Date.objects.create(date=today)
+
                 if Absence.objects.filter(student=student, clas=currentClass).exists():
-                    absent = Absence.objects.get(
-                        student=student, clas=currentClass)
-                    absent.counter += 1
-                    print(absent.counter)
-                    absent.save()
+
+                    if Absence.objects.filter(student=student, clas=currentClass, date=DATE).exists():
+
+                        print(f"student {student} is already marked absent")
+
+                    else:
+                        absent = Absence.objects.get(
+                            student=student, clas=currentClass)
+                        absent.save()
+                        absent.counter += 1
+                        absent.date.add(DATE)
+                        absent.save()
+                        print(f" Student {student} is Abcent")
                 else:
                     absent = Absence.objects.create(
                         student=student, clas=currentClass)
                     absent.counter += 1
+                    absent.date.add(DATE)
                     absent.save()
+                    print(f" Student {student} is Abcent")
             return redirect('./Results')
 
         else:
@@ -486,7 +506,7 @@ def attendanceResult(request, class_name, class_id):
     day = Attendance.objects.filter(presence_date=today)
     for st in day:
         prestudents = st.student.all()
-    print(f' students: {prestudents}')
+    # print(f' students: {prestudents}')
 
     currentClass = Class.objects.get(class_id=class_id)
     students = Student.objects.filter(

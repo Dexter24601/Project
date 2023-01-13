@@ -58,16 +58,25 @@ class Attendance(models.Model):
     student = models.ManyToManyField(Student)
 
     clas = models.ForeignKey(Class, null=True, on_delete=models.SET_NULL)
-    # abcent = models.IntegerField()
+
+    # img_taken = models.FileField()
 
     def __str__(self):
         return (f'{self.clas}-{self.presence_date}')
+
+
+class Date(models.Model):
+    date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return (f'{self.date}')
 
 
 class Absence(models.Model):
     student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
     clas = models.ForeignKey(Class, null=True, on_delete=models.SET_NULL)
     counter = models.IntegerField(default=0)
+    date = models.ManyToManyField(Date)
 
     def __str__(self):
         return (f"{self.student}-({self.clas})")
