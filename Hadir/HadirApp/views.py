@@ -316,7 +316,6 @@ def Classes(request):
                 # print(clas)
                 if clas.instructor == request.user:
                     theClasses.append(clas)
-                    print('class found')
         except:
             if Class.objects.filter(instructor=request.user).instructor == request.user:
                 theClasses.append(clas)
@@ -340,7 +339,7 @@ def dashboard(request, class_name, class_id):
 def clas(request, class_id, class_name):
 
     try:
-        if Class.objects.filter(class_id=class_id).exists():
+        if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
             currentClass = Class.objects.get(class_id=class_id)
             students = Student.objects.all()
             classStd = []
