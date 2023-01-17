@@ -190,65 +190,69 @@ def mainPage(request):
 @login_required(login_url='/Hadir/Classes/login')
 def student_enrollment(request, class_name, class_id):
 
-    if request.method == 'POST':
-        name = request.POST['name']
-        student_id = request.POST['student_id']
-        images = request.FILES.getlist('images')
-        if Class.objects.filter(class_id=class_id).exists:
-            classes = Class.objects.get(class_id=class_id)
-            print(classes)
-        else:
-            print('404 Class Not Found')
-            return redirect('/Hadir/404')
+    if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
 
-        match = re.match(r'^(4)(\d{2}0\d{4})$', student_id)
+        if request.method == 'POST':
+            name = request.POST['name']
+            student_id = request.POST['student_id']
+            images = request.FILES.getlist('images')
+            if Class.objects.filter(class_id=class_id).exists():
+                classes = Class.objects.get(class_id=class_id)
+                print(classes)
+            else:
+                print('404 Class Not Found')
+                return redirect('/Hadir/404')
 
-        try:
-            if Student.objects.filter(student_id=student_id).exists():
-                st = Student.objects.get(student_id=student_id)
-                print(st.classes.all())
+            match = re.match(r'^(4)(\d{2}0\d{4})$', student_id)
 
-                for clas in st.classes.all():
-                    if clas == classes:
-                        idErr = 'A Student with this ID already exsist in this class'
-                        print(idErr)
-                        return render(request, 'HadirApp/student_enrollment.html', {'idErr': idErr})
+            try:
+                if Student.objects.filter(student_id=student_id).exists():
+                    st = Student.objects.get(student_id=student_id)
+                    print(st.classes.all())
 
-                st.classes.add(classes)
-                st.save()
+                    for clas in st.classes.all():
+                        if clas == classes:
+                            idErr = 'A Student with this ID already exsist in this class'
+                            print(idErr)
+                            return render(request, 'HadirApp/student_enrollment.html', {'idErr': idErr})
 
-                # succMsg = (f'Student {st.name} has been added to {classes.class_name} class succesfuly')
-                # print(succMsg)
+                    st.classes.add(classes)
+                    st.save()
 
-                messages.success(
-                    request, f'Student {st.name} has been added to {classes.class_name} class succesfuly')
-                # 'succMsg':succMsg
-                return render(request, 'HadirApp/student_enrollment.html', {'class_name': classes.class_name})
+                    # succMsg = (f'Student {st.name} has been added to {classes.class_name} class succesfuly')
+                    # print(succMsg)
 
-            elif not match:
-                wrongID = 'Invalid Student ID!'
-                print(wrongID)
-                return render(request, 'HadirApp/student_enrollment.html', {'wrongID': wrongID})
-                # see the vid https://www.youtube.com/watch?v=f3iytAmzuNQ&t=298s
+                    messages.success(
+                        request, f'Student {st.name} has been added to {classes.class_name} class succesfuly')
+                    # 'succMsg':succMsg
+                    return render(request, 'HadirApp/student_enrollment.html', {'class_name': classes.class_name})
 
-            student = Student.objects.create(
-                name=name, student_id=student_id)  # classes=classes
+                elif not match:
+                    wrongID = 'Invalid Student ID!'
+                    print(wrongID)
+                    return render(request, 'HadirApp/student_enrollment.html', {'wrongID': wrongID})
+                    # see the vid https://www.youtube.com/watch?v=f3iytAmzuNQ&t=298s
 
-            print('alive!')
-            student.classes.add(classes)  # solution for many to many
-            student.save()
-            print(f'student {student} is registered')
+                student = Student.objects.create(
+                    name=name, student_id=student_id)  # classes=classes
 
-            for image in images:
-                # print(image)
-                # print(student.student_id)
-                Image.objects.create(images=image, student=student)
-            images = Image.objects.all()
-        except:
-            print('404 Not Found')
-            return redirect('/Hadir/404')
+                print('alive!')
+                student.classes.add(classes)  # solution for many to many
+                student.save()
+                print(f'student {student} is registered')
 
-    return render(request, 'HadirApp/student_enrollment.html', {'class_name': class_name})
+                for image in images:
+                    # print(image)
+                    # print(student.student_id)
+                    Image.objects.create(images=image, student=student)
+                images = Image.objects.all()
+            except:
+                print('404 Not Found')
+                return redirect('/Hadir/404')
+
+        return render(request, 'HadirApp/student_enrollment.html', {'class_name': class_name})
+    else:
+        return redirect('/Hadir/404')
 
 
 def upload(request):
@@ -328,14 +332,6 @@ def Classes(request):
 
 
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')
-def dashboard(request, class_name, class_id):
-    students = []
-    # for student in Student.objects.all():
-    #     st
-    return render(request, 'HadirApp/dashboard.html', {'class_name': class_name})
-
-
-@login_required(login_url='/Hadir/login?next=/Hadir/Classes')
 def clas(request, class_id, class_name):
 
     try:
@@ -369,172 +365,191 @@ def clas(request, class_id, class_name):
 
 
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')
+def dashboard(request, class_name, class_id):
+    students = []
+    if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
+
+        return render(request, 'HadirApp/dashboard.html', {'class_name': class_name})
+    else:
+        return redirect('/Hadir/404')
+
+
+@login_required(login_url='/Hadir/login?next=/Hadir/Classes')
 def attendance(request, class_name, class_id):
 
-    today = date.today()
-    currentClass = Class.objects.get(class_id=class_id)
+    if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
 
-    students = Student.objects.filter(
-        classes=currentClass)  # all student in the class
+        today = date.today()
+        currentClass = Class.objects.get(class_id=class_id)
 
-    # print(request.method)
-    # print(Attendance.objects.all())
-    if request.method == "POST":
-        studentsNames = request.POST.getlist('student')
-        #  Student.objects.filter(id=)
-        prestudents = []    # present student in the class
-        for name in studentsNames:
-            prestudents.append(Student.objects.get(name=name))
-        print('')
-        print(f'Date: {today}')
-        print("------------------------------")
-        print(f'class: {currentClass} ')
-        print("------------------------------")
+        students = Student.objects.filter(
+            classes=currentClass)  # all student in the class
 
-        if Attendance.objects.filter(presence_date=today, clas=currentClass).exists():
-            print("Exist (Attendance is Already took)")
-            day = Attendance.objects.get(
-                presence_date=today, clas=currentClass)
-
-            # Absence.objects.filter(info=day, student=name)
-
-            print(f'Attandance for: {day}')
-            for st in prestudents:
-
-                # st.student_absence.add(1)
-                day.student.add(st)
-                day.save()
-                print(f'{st} Marked As Present!')
-
-            abcentStudents = [
-                student for student in students if student not in prestudents]
-
-            """for student in abcentStudents:
-
-
-                # student = Student.objects.get(name=student)
-                if Absence.objects.filter(info=day, student=student).exists():
-
-                    print(f"student {student} is already marked absent")
-                    pass
-
-                    # name.add(student)
-                    # name.save()
-                elif Absence.objects.filter(info=day).exists():
-                    absence = Absence.objects.get(info=day)
-                    absence.student.add(student)
-                    print(f" Student {student} is Absent")
-                else:
-                    absence = Absence.objects.create(
-                        info=day)
-                    absence.student.add(student)
-                    absence.save()
-                    print(f"created: {absence}")
-                    print(f" Student {student} is Absent")
-                    # student.student_absence += 1
-                    # student.save()
-
-                absenceCounter = Student.objects.get(name=student)
-                absenceCounter.student_absence = +1
-                print(absenceCounter.student_absence) """
+        # print(request.method)
+        # print(Attendance.objects.all())
+        if request.method == "POST":
+            studentsNames = request.POST.getlist('student')
+            #  Student.objects.filter(id=)
+            prestudents = []    # present student in the class
+            for name in studentsNames:
+                prestudents.append(Student.objects.get(name=name))
+            print('')
+            print(f'Date: {today}')
             print("------------------------------")
-            for student in abcentStudents:
+            print(f'class: {currentClass} ')
+            print("------------------------------")
 
-                if Date.objects.filter(date=today).exists():
-                    DATE = Date.objects.get(date=today)
-                    pass
-                else:
-                    DATE = Date.objects.create(date=today)
+            if Attendance.objects.filter(presence_date=today, clas=currentClass).exists():
+                print("Exist (Attendance is Already took)")
+                day = Attendance.objects.get(
+                    presence_date=today, clas=currentClass)
 
-                if Absence.objects.filter(student=student, clas=currentClass).exists():
+                # Absence.objects.filter(info=day, student=name)
 
-                    if Absence.objects.filter(student=student, clas=currentClass, date=DATE).exists():
+                print(f'Attandance for: {day}')
+                for st in prestudents:
+
+                    # st.student_absence.add(1)
+                    day.student.add(st)
+                    day.save()
+                    print(f'{st} Marked As Present!')
+
+                abcentStudents = [
+                    student for student in students if student not in prestudents]
+
+                """for student in abcentStudents:
+
+
+                    # student = Student.objects.get(name=student)
+                    if Absence.objects.filter(info=day, student=student).exists():
 
                         print(f"student {student} is already marked absent")
+                        pass
 
+                        # name.add(student)
+                        # name.save()
+                    elif Absence.objects.filter(info=day).exists():
+                        absence = Absence.objects.get(info=day)
+                        absence.student.add(student)
+                        print(f" Student {student} is Absent")
                     else:
-                        absent = Absence.objects.get(
+                        absence = Absence.objects.create(
+                            info=day)
+                        absence.student.add(student)
+                        absence.save()
+                        print(f"created: {absence}")
+                        print(f" Student {student} is Absent")
+                        # student.student_absence += 1
+                        # student.save()
+
+                    absenceCounter = Student.objects.get(name=student)
+                    absenceCounter.student_absence = +1
+                    print(absenceCounter.student_absence) """
+                print("------------------------------")
+                for student in abcentStudents:
+
+                    if Date.objects.filter(date=today).exists():
+                        DATE = Date.objects.get(date=today)
+                        pass
+                    else:
+                        DATE = Date.objects.create(date=today)
+
+                    if Absence.objects.filter(student=student, clas=currentClass).exists():
+
+                        if Absence.objects.filter(student=student, clas=currentClass, date=DATE).exists():
+
+                            print(
+                                f"student {student} is already marked absent")
+
+                        else:
+                            absent = Absence.objects.get(
+                                student=student, clas=currentClass)
+                            absent.save()
+                            absent.counter += 1
+                            absent.date.add(DATE)
+                            absent.save()
+                            print(f" Student {student} is Abcent")
+                    else:
+                        absent = Absence.objects.create(
                             student=student, clas=currentClass)
-                        absent.save()
                         absent.counter += 1
                         absent.date.add(DATE)
                         absent.save()
                         print(f" Student {student} is Abcent")
-                else:
-                    absent = Absence.objects.create(
-                        student=student, clas=currentClass)
-                    absent.counter += 1
-                    absent.date.add(DATE)
-                    absent.save()
-                    print(f" Student {student} is Abcent")
-            return redirect('./Results')
+                return redirect('./Results')
 
-        else:
-            day = Attendance.objects.create(
-                presence_date=today, clas=currentClass)
-            day.save()
-            print(f'{day} CREATED!')
-
-            for st in prestudents:
-
-                day.student.add(st)
+            else:
+                day = Attendance.objects.create(
+                    presence_date=today, clas=currentClass)
                 day.save()
-                print(f'{st} Marked As Present!')
+                print(f'{day} CREATED!')
 
-            abcentStudents = [
-                student for student in students if student not in prestudents]
+                for st in prestudents:
 
-            for student in abcentStudents:
-                print(f" Student {student} is Abcent")
-                if Absence.objects.filter(student=student, clas=currentClass).exists():
-                    absent = Absence.objects.get(
-                        student=student, clas=currentClass)
-                    absent.counter = + 1
-                    absent.save()
-                else:
-                    absent = Absence.objects.create(
-                        student=student, clas=currentClass)
-                    absent.counter = + 1
-                    absent.save()
-                # student.student_absence += 1
-                # student.save()
+                    day.student.add(st)
+                    day.save()
+                    print(f'{st} Marked As Present!')
 
-            return redirect('./Results')
+                abcentStudents = [
+                    student for student in students if student not in prestudents]
 
-    context = {'students': students,
-               'class_name': class_name, 'class_id': class_id}
-    return render(request, 'HadirApp/take_attendance.html', context)
+                for student in abcentStudents:
+                    print(f" Student {student} is Abcent")
+                    if Absence.objects.filter(student=student, clas=currentClass).exists():
+                        absent = Absence.objects.get(
+                            student=student, clas=currentClass)
+                        absent.counter = + 1
+                        absent.save()
+                    else:
+                        absent = Absence.objects.create(
+                            student=student, clas=currentClass)
+                        absent.counter = + 1
+                        absent.save()
+                    # student.student_absence += 1
+                    # student.save()
+
+                return redirect('./Results')
+
+        context = {'students': students,
+                   'class_name': class_name, 'class_id': class_id}
+        return render(request, 'HadirApp/take_attendance.html', context)
+    else:
+        return redirect('/Hadir/404')
 
 
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')
 def attendanceResult(request, class_name, class_id):
 
-    today = date.today()
-    # to get all present students today
-    day = Attendance.objects.filter(presence_date=today)
-    for st in day:
-        prestudents = st.student.all()
-    # print(f' students: {prestudents}')
+    if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
 
-    currentClass = Class.objects.get(class_id=class_id)
-    students = Student.objects.filter(
-        classes=currentClass)
-    abcentStudents = [
-        student for student in students if student not in prestudents]
+        today = date.today()
+        # to get all present students today
+        day = Attendance.objects.filter(presence_date=today)
+        for st in day:
+            prestudents = st.student.all()
+        # print(f' students: {prestudents}')
 
-    return render(request, 'HadirApp/results.html', {'prestudents': prestudents, 'abcentStudents': abcentStudents})
-    # old way
+        currentClass = Class.objects.get(class_id=class_id)
+        students = Student.objects.filter(
+            classes=currentClass)
+        abcentStudents = [
+            student for student in students if student not in prestudents]
 
-    # template = loader.get_template('HadirApp/welcome.html')
-    # context = RequestContext(request, {
+        return render(request, 'HadirApp/results.html', {'prestudents': prestudents, 'abcentStudents': abcentStudents})
+        # old way
 
-    #     'latest_users': latest_users,
-    # })
-    # context_dict = context.flatten()
-    # return HttpResponse(template.render(context_dict))
+        # template = loader.get_template('HadirApp/welcome.html')
+        # context = RequestContext(request, {
 
-    # def absent(request, student_id):
-    #     student = get_object_or_404(Student, pk=student_id)
+        #     'latest_users': latest_users,
+        # })
+        # context_dict = context.flatten()
+        # return HttpResponse(template.render(context_dict))
+
+        # def absent(request, student_id):
+        #     student = get_object_or_404(Student, pk=student_id)
+    else:
+        return redirect('/Hadir/404')
 
 
 def PageNotFound(request):
