@@ -52,13 +52,22 @@ def registerPage(request):
         if request.method == 'POST':
             form = RegisterForm(request.POST)
             if form.is_valid():
-                form.save()
-                user = form.save()
-                login(request, user)
-                # print(f" 11111111111111111{form.username}")
-                # print(user.username)
-                return redirect('/Hadir/main')
-                # return render(request, 'HadirApp/MainPage.html', {'user': user})
+                if User.objects.filter(email=request.POST['email']).exists():
+
+                    err = (f'A user with this Email already exist!')
+                    # exist = authenticate(user)
+                    return render(request, 'HadirApp/register.html', {'err': err, 'form': form})
+                else:
+                    form.save()
+                    user = form.save()
+                    login(request, user)
+
+                    return redirect('/Hadir/main')
+                    # return render(request, 'HadirApp/MainPage.html', {'user': user})
+
+            elif request.POST['password1'] != request.POST['password2']:
+                err = (f'Passwords Doesnt Match!')
+                return render(request, 'HadirApp/register.html', {'err2': err, 'form': form})
 
         else:
             print(request.method)
