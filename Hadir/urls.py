@@ -48,6 +48,11 @@ urlpatterns = [
     path('Hadir/Classes/<str:class_name>-<int:class_id>', views.clas, name="clas"),
     # http://localhost:8000/Hadir/math-103
 
+    path('Hadir/Classes/<str:class_name>-<int:class_id>/Delete',
+         views.delete, name="delete"),
+    # http://localhost:8000/Hadir/math-103
+
+
     path('Hadir/Classes/<str:class_name>-<int:class_id>/Dashboard',
          views.dashboard, name="dashboard"),
     # http://localhost:8000/Hadir/Dashboard
@@ -62,6 +67,10 @@ urlpatterns = [
 
     path('Hadir/images', views.images, name='images'),
     # http://localhost:8000/Hadir/images
+
+    path('Hadir/Traning', views.traning, name='traning'),
+    # http://localhost:8000/Hadir/images
+
 
     path('Hadir/register', views.registerPage, name="registerPage"),
     # http://localhost:8000/Hadir/register

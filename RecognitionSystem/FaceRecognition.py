@@ -31,14 +31,18 @@ def Recognize_TestImages(Result, img, training_tensor, training_IDs, proj_data, 
     norms = np.linalg.norm(diff, axis=1)
     index = np.argmin(norms)
 
+    # Thresholds 1,2
+    t0 = 600535910  # t0 = 200535910  True
+    t1 = 358850297.2102374  # t1 = 143559033    False
+
     # Store results here for future uses
     if training_IDs[index] not in Result:
-        Result.append(training_IDs[index])
 
-    # Thresholds 1,2
-    t0 = 200535910
-    t1 = 143559033
-    print(norms[index])
+        if norms[index] < t0 and norms[index] > t1:
+            Result.append(training_IDs[index])
+        else:
+            print(f" No match for {training_IDs[index]} (index out of range)")
+    print(norms[index], training_IDs[index])
     if debugMode:
         if norms[index]:
             plt.subplot(2, 2, 1+count)
@@ -61,14 +65,22 @@ def Recognize_TestImages(Result, img, training_tensor, training_IDs, proj_data, 
                     height, width), cmap='gray')
 
 
-def Recognize():
+def Recognize(students):
     global width, height, debugMode
 
     TestPath = resource_path('RecognitionSystem/Processing/Detections')
     matplotlib.use('tkagg')
 
-    ImageSet = Image.objects.all()
-    ImageSet_Size = ImageSet.count()
+    wantedImgs = []
+    for s in students:
+        for img in Image.objects.filter(student=s):
+            wantedImgs.append(img)
+
+    for img in Traning.objects.all():
+        wantedImgs.append(img)
+
+    ImageSet = wantedImgs
+    ImageSet_Size = len(ImageSet)
     TestImage_Size = len(os.listdir(TestPath))
 
     # Store students Images
@@ -135,7 +147,7 @@ def Recognize():
                        for index in range(len(eigenvalues))]
 
     # PCA K -> 7
-    reduced_data = np.array(eigvectors_sort[:100]).transpose()
+    reduced_data = np.array(eigvectors_sort[:20]).transpose()
     proj_data = np.dot(training_tensor.transpose(), reduced_data)
     proj_data = proj_data.transpose()
 

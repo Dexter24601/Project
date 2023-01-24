@@ -13,7 +13,6 @@
 <h1>Present Students</h1>
 <ul>
     {% for student in prestudents %}
-    {% if '43000000' not in student.student_id %}
     <li style="color: rgb(28, 188, 81);">
         {{student}}
     </li>
@@ -24,7 +23,6 @@
 <h1>Abcent Students</h1>
 <ul>
     {% for student in abcentStudents %}
-    {% if '43000000' not in student.student_id %}
     <li style="color: brown;">
         {{student}}
     </li>

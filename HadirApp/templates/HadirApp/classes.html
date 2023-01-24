@@ -2,44 +2,19 @@
 
 {% block main_content %}
 
-<p>Welcome {{request.user}}</p> <br>
-{% if theClasses %}
-<div class="filter"></div>
-<table>
-    <tr>
-        <th>#</th>
-        <th>class</th>
-        <th>Class_id</th>
-        <th>students</th>
-        <th>date</th>
-        <th>view</th>
-    </tr>
-    {% for class in theClasses %}
-
-    <tr>
-        <td></td>
-        <td>{{class.class_name}}</td>
-        <td>{{class.class_id}}</td>
-        <td>{{class.num_of_students}}</td>
-        <td>18 Nov 1962</td>
-        <td class="view"><a href="Classes/{{class.class_name}}-{{class.class_id}}">{{class}}</a></td>
-    </tr>
-    </div>
-    {% endfor %}
-    {% endif %}
-</table>
-{% if err %}
-
-<h1> {{err}}</h1>
-<h2><a href="Create_class">Create Class</a></h2>
-
-{% endif %}
 <style>
     footer {
         width: 100%;
         float: inline-end;
         position: fixed;
 
+    }
+
+    .delete a {
+        color: rgb(187, 35, 35);
+        text-decoration: none;
+        align-items: center;
+        padding-top: 3%;
     }
 
     p {
@@ -84,7 +59,7 @@
         background-color: #eeeeee;
     }
 
-    table td a {
+    .view a {
         color: #2175ba;
         text-decoration: none;
         align-items: center;
@@ -102,4 +77,36 @@
         }
     }
 </style>
+<p>Welcome {{request.user}}</p> <br>
+{% if theClasses %}
+<div class="filter"></div>
+<table>
+    <tr>
+        <th>#</th>
+        <th>class</th>
+        <th>Class_id</th>
+        <th>students</th>
+        <th>date</th>
+        <th>status</th>
+    </tr>
+    {% for class in theClasses %}
+
+    <tr>
+        <td></td>
+        <td class="view"><a href="Classes/{{class.class_name}}-{{class.class_id}}">{{class.class_name}}</a></td>
+        <td>{{class.class_id}}</td>
+        <td>{{class.num_of_students}}</td>
+        <td>{{class.Creation_date.year}}/{{class.Creation_date.month}}/{{class.Creation_date.day}}</td>
+        <td class="delete"><a href="Classes/{{class.class_name}}-{{class.class_id}}/Delete">Delete</a></td>
+    </tr>
+    </div>
+    {% endfor %}
+    {% endif %}
+</table>
+{% if err %}
+
+<h1> {{err}}</h1>
+<h2><a href="Create_class">Create Class</a></h2>
+
+{% endif %}
 {% endblock %}

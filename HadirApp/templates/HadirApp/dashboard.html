@@ -92,7 +92,8 @@
 
     .users td {
       font-size: 14px;
-      padding-right: 15px;
+      padding: 5px;
+
     }
 
     .users .card button {
@@ -208,13 +209,13 @@
         {% for student in students %}
         {% if '43000000' not in student.student_id %}
         <div class="card">
-          <img src="{% static 'Hadir/media/ibra.jpg' %}">
+          <img src="{{student.profilePic.url}}">
           <h4>{{student.name}}</h4>
           <p>Student</p>
           <div class="per">
             <table>
               <tr>
-                <td><span>85%</span></td>
+                <td><span>5%</span></td>
                 <td><span>87%</span></td>
               </tr>
               <tr>

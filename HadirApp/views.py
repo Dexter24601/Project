@@ -8,7 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from .forms import RegisterForm
 from django.shortcuts import render, redirect
-from .models import Student, Class, Image, Attendance, Absence, Date
+from .models import Student, Class, Image, Attendance, Absence, Date, Traning
 
 from datetime import date
 
@@ -120,86 +120,82 @@ def mainPage(request):
 @login_required(login_url='/Hadir/Classes/login')
 def student_enrollment(request, class_name, class_id):
 
-    if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
+    if request.method == 'POST':
+        name = request.POST['name']
+        student_id = request.POST['student_id']
+        images = request.FILES.getlist('images')
+        if Class.objects.filter(class_id=class_id).exists:
+            classes = Class.objects.get(class_id=class_id)
+            print(classes)
+        else:
+            print('404 Class Not Found')
+            return redirect('/Hadir/404')
 
-        if request.method == 'POST':
-            name = request.POST['name']
-            student_id = request.POST['student_id']
-            images = request.FILES.getlist('images')
-            if Class.objects.filter(class_id=class_id).exists:
-                classes = Class.objects.get(class_id=class_id)
-                print(classes)
-            else:
-                print('404 Class Not Found')
-                return redirect('/Hadir/404')
+        match = re.match(r'^(4)(\d{2}0\d{4})$', student_id)
 
-            match = re.match(r'^(4)(\d{2}0\d{4})$', student_id)
+        try:
+            if Student.objects.filter(student_id=student_id).exists():
 
-            try:
-                if Student.objects.filter(student_id=student_id).exists():
+                st = Student.objects.get(student_id=student_id)
+                print(st.classes.all())
 
-                    st = Student.objects.get(student_id=student_id)
-                    print(st.classes.all())
+                for clas in st.classes.all():
+                    if clas == classes:
+                        idErr = 'A Student with this ID already exsist in this class'
+                        print(idErr)
+                        return render(request, 'HadirApp/student_enrollment.html', {'idErr': idErr})
 
-                    for clas in st.classes.all():
-                        if clas == classes:
-                            idErr = 'A Student with this ID already exsist in this class'
-                            print(idErr)
-                            return render(request, 'HadirApp/student_enrollment.html', {'idErr': idErr})
+                st.classes.add(classes)
+                st.save()
 
-                    st.classes.add(classes)
-                    st.save()
+                messages.success(
+                    request, f'Student {st.name} has been added to {classes.class_name} class succesfuly')
+                return render(request, 'HadirApp/student_enrollment.html', {'class_name': classes.class_name})
 
-                    messages.success(
-                        request, f'Student {st.name} has been added to {classes.class_name} class succesfuly')
-                    return render(request, 'HadirApp/student_enrollment.html', {'class_name': classes.class_name})
+            elif not match:
+                wrongID = 'Invalid Student ID!'
+                print(wrongID)
+                return render(request, 'HadirApp/student_enrollment.html', {'wrongID': wrongID})
 
-                elif not match:
-                    wrongID = 'Invalid Student ID!'
-                    print(wrongID)
-                    return render(request, 'HadirApp/student_enrollment.html', {'wrongID': wrongID})
+            FolderToSave = resource_path('RecognitionSystem/Processing/')
 
-                FolderToSave = resource_path('RecognitionSystem/Processing/')
+            n = 0
+            for image in images:
+                X = PIL.Image.open(image)
+                X.save(f'{FolderToSave}{n}({st}).jpg')
+                n += 1
 
-                n = 0
-                for image in images:
-                    X = PIL.Image.open(image)
-                    X.save(f'{FolderToSave}{n}.jpg')
-                    n += 1
+            # Detect Submitted Faces
+            ImgsNames = DetectFaces(
+                PostProccessing=True, ImagePath=FolderToSave)
 
-                # Detect Submitted Faces
+            # If we didn't detect any face -> try with less confidence
+            if len(ImgsNames) < 1:
                 ImgsNames = DetectFaces(
-                    PostProccessing=True, ImagePath=FolderToSave)
+                    PostProccessing=True, ImagePath=FolderToSave, ConfidenceThreshold=0.64)
 
-                # If we didn't detect any face -> try with less confidence
-                if len(ImgsNames) < 1:
-                    ImgsNames = DetectFaces(
-                        PostProccessing=True, ImagePath=FolderToSave, ConfidenceThreshold=0.64)
+            # if we got detection
+            if len(ImgsNames) >= 1:
+                student = Student.objects.create(
+                    name=name, student_id=student_id, profilePic=images[0])
+                student.classes.add(classes)
 
-                # if we got detection
-                if len(ImgsNames) >= 1:
-                    student = Student.objects.create(
-                        name=name, student_id=student_id)
-                    student.classes.add(classes)
-                    student.save()
-                    print(f'student {student} is registered')
+                student.save()
+                print(f'student {student} is registered')
 
-                    # Import to Database
-                    for im in ImgsNames:
-                        Image.objects.create(
-                            student=student, images=(f'Students/{im}'))
+                # Import to Database
+                for im in ImgsNames:
+                    Image.objects.create(
+                        student=student, images=(f'Students/{im}'))
 
-                    DeleteFolderIfExist(FolderToSave)  # why?
-                else:
-                    print('Didnt detect any faces.')
+                DeleteFolderIfExist(FolderToSave)  # why?
+            else:
+                print('Didnt detect any faces.')
 
-            except Exception as e:
-                print(e)
-                return redirect('/Hadir/404')
-        return render(request, 'HadirApp/student_enrollment.html', {'class_name': class_name})
-
-    else:
-        return redirect('/Hadir/404')
+        except Exception as e:
+            print(e)
+            return redirect('/Hadir/404')
+    return render(request, 'HadirApp/student_enrollment.html', {'class_name': class_name})
 
 
 # to show all images // (insignificant)
@@ -254,7 +250,7 @@ def Classes(request):
             for clas in Class.objects.filter(instructor=request.user):
                 if clas.instructor == request.user:
                     theClasses.append(clas)
-                    print('class found')
+                    print(clas)
         except:
             if Class.objects.filter(instructor=request.user).instructor == request.user:
                 theClasses.append(clas)
@@ -263,6 +259,21 @@ def Classes(request):
     else:
         err = "You dont Have Any Classes"
         return render(request, 'HadirApp/classes.html', {'err': err})
+
+
+@login_required(login_url='/Hadir/login?next=/Hadir/Classes')
+def delete(request, class_id, class_name):
+
+    if Class.objects.filter(instructor=request.user).exists():
+
+        try:
+            clas = Class.objects.get(class_id=class_id).delete()
+            return redirect('/Hadir/Classes')
+        except Exception as e:
+            print(e)
+            return redirect('/Hadir/404')
+    else:
+        return redirect('/Hadir/404')
 
 
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')
@@ -337,7 +348,7 @@ def attendance(request, class_name, class_id):
                     n += 1
                 DetectFaces(PostProccessing=False, ImagePath=FolderToSave,
                             ConfidenceThreshold=0.65)
-                students_ids = Recognize()
+                students_ids = Recognize(students)
                 print(
                     f'Recognized students: {Student.objects.get(student_id=students_ids[0])}')
 
@@ -442,20 +453,36 @@ def attendance(request, class_name, class_id):
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')
 def attendanceResult(request, class_name, class_id):
 
-    today = date.today()
-    # to get all present students today
-    day = Attendance.objects.filter(presence_date=today)
-    for st in day:
-        prestudents = st.student.all()
-    # print(f' students: {prestudents}')
+    try:
 
-    currentClass = Class.objects.get(class_id=class_id)
-    students = Student.objects.filter(
-        classes=currentClass)
-    abcentStudents = [
-        student for student in students if student not in prestudents]
+        today = date.today()
+        # to get all present students today
+        day = Attendance.objects.filter(presence_date=today)
+        for st in day:
+            prestudents = st.student.all()
+        # print(f' students: {prestudents}')
 
+        currentClass = Class.objects.get(class_id=class_id)
+        students = Student.objects.filter(
+            classes=currentClass)
+        abcentStudents = [
+            student for student in students if student not in prestudents]
+    except Exception as e:
+        print(e)
+        return redirect('/Hadir/404')
     return render(request, 'HadirApp/results.html', {'prestudents': prestudents, 'abcentStudents': abcentStudents})
+
+
+@login_required(login_url='./login')
+def traning(request):
+    if request.method == "POST":
+        images = request.FILES.getlist('images')
+
+        for img in images:
+            image = Traning.objects.create(images=(f'Traning/{img}'))
+            image.save()
+        print('Traning set added succesfuly')
+    return render(request, 'HadirApp/Traning.html')
 
 
 def PageNotFound(request):
