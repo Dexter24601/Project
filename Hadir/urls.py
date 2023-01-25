@@ -69,7 +69,7 @@ urlpatterns = [
     # http://localhost:8000/Hadir/images
 
     path('Hadir/Traning', views.traning, name='traning'),
-    # http://localhost:8000/Hadir/images
+    # http://localhost:8000/Hadir/Traning
 
 
     path('Hadir/register', views.registerPage, name="registerPage"),
