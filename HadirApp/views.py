@@ -158,11 +158,10 @@ def student_enrollment(request, class_name, class_id):
                 return render(request, 'HadirApp/student_enrollment.html', {'wrongID': wrongID})
 
             FolderToSave = resource_path('RecognitionSystem/Processing/')
-
             n = 0
             for image in images:
                 X = PIL.Image.open(image)
-                X.save(f'{FolderToSave}{n}({st}).jpg')
+                X.save(f'{FolderToSave}{n}({name}).jpg')
                 n += 1
 
             # Detect Submitted Faces
@@ -195,6 +194,9 @@ def student_enrollment(request, class_name, class_id):
         except Exception as e:
             print(e)
             return redirect('/Hadir/404')
+
+        messages.success(
+            request, f'Student {name} has been added to {classes.class_name} class succesfuly')
     return render(request, 'HadirApp/student_enrollment.html', {'class_name': class_name})
 
 
@@ -262,13 +264,36 @@ def Classes(request):
 
 
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')
-def delete(request, class_id, class_name):
+def deleteClass(request, class_id, class_name):
 
     if Class.objects.filter(instructor=request.user).exists():
 
         try:
             clas = Class.objects.get(class_id=class_id).delete()
+            print(f"class: {clas} Has been deleted succefuly")
+
+            # return render(request, 'HadirApp/Classes.html', {'Delclass': clas})
             return redirect('/Hadir/Classes')
+        except Exception as e:
+            print(e)
+            return redirect('/Hadir/404')
+    else:
+        return redirect('/Hadir/404')
+
+
+@login_required(login_url='/Hadir/login?next=/Hadir/Classes')
+def deleteStudent(request, class_name, class_id, student_id, name):
+
+    if Class.objects.filter(instructor=request.user).exists():
+
+        try:
+            clas = Class.objects.get(class_id=class_id)
+            students = Student.objects.filter(classes=clas)
+            student = Student.objects.get(student_id=student_id)
+            student.classes.remove(clas)
+            print(f"Student: {student} Has been deleted from {clas} succefuly")
+
+            return render(request, "HadirApp/dashboard.html", {'class_name': class_name, 'class_id': class_id, 'delstudent': student, 'students': students})
         except Exception as e:
             print(e)
             return redirect('/Hadir/404')
@@ -304,23 +329,6 @@ def clas(request, class_id, class_name):
         return redirect('/Hadir/404')
 
     return render(request, 'HadirApp/class.html')
-
-
-@login_required(login_url='/Hadir/login?next=/Hadir/Classes')
-def dashboard(request, class_name, class_id):
-    if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
-        clas = Class.objects.get(class_id=class_id, instructor=request.user)
-        students = Student.objects.filter(classes=clas)
-        i = 1
-        for student in students:
-            i += 1
-            print(student)
-
-        # for student in students:
-        #     print(student)
-        return render(request, 'HadirApp/dashboard.html', {'class_name': class_name, 'class_id': class_id, 'students': students, 'i': i})
-    else:
-        return redirect('/Hadir/404')
 
 
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')
@@ -402,6 +410,8 @@ def attendance(request, class_name, class_id):
                                 student=student, clas=currentClass)
                             absent.save()
                             absent.counter += 1
+                            absent.save()
+
                             absent.date.add(DATE)
                             absent.save()
                             print(f" Student {student} is Abcent")
@@ -467,10 +477,26 @@ def attendanceResult(request, class_name, class_id):
             classes=currentClass)
         abcentStudents = [
             student for student in students if student not in prestudents]
+
     except Exception as e:
         print(e)
         return redirect('/Hadir/404')
     return render(request, 'HadirApp/results.html', {'prestudents': prestudents, 'abcentStudents': abcentStudents})
+
+
+@login_required(login_url='/Hadir/login?next=/Hadir/Classes')
+def dashboard(request, class_name, class_id):
+    if Class.objects.filter(class_id=class_id, instructor=request.user).exists():
+        clas = Class.objects.get(class_id=class_id, instructor=request.user)
+        students = Student.objects.filter(classes=clas)
+        Ablist = []
+        for student in students:
+            absence = Absence.objects.filter(student=student, clas=clas)
+            # Ablist.append(len(absence))
+
+            return render(request, 'HadirApp/dashboard.html', {'class_name': class_name, 'class_id': class_id, 'students': students, 'absence': absence})
+    else:
+        return redirect('/Hadir/404')
 
 
 @login_required(login_url='./login')
@@ -486,4 +512,5 @@ def traning(request):
 
 
 def PageNotFound(request):
+
     return render(request, 'HadirApp/404.html')

@@ -23,9 +23,6 @@
       font-family: "Poppins", sans-serif;
     }
 
-    body {
-      background: #fff;
-    }
 
 
     .container {
@@ -55,13 +52,17 @@
     }
 
     .users .card {
-      width: 25%;
       margin: 15px;
       background: #fff;
       text-align: center;
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 3px 10px rgb(0 0 0 /0.3);
+      min-width: 250px;
+    }
+
+    .card h4 {
+      margin-top: 10px;
     }
 
     .users .card img {
@@ -147,7 +148,7 @@
 
     .table th,
     .table td {
-      padding: 12px 15px;
+      padding: 25px 15px;
     }
 
     .table tbody tr {
@@ -162,20 +163,22 @@
       border-bottom: 2px solid #599dd5;
     }
 
-    .table button {
+    .table a {
       padding: 6px 20px;
       border-radius: 10px;
       cursor: pointer;
-      color: #599dd5;
+      color: #d55959;
       background: transparent;
-      border: 1px solid #599dd5;
+      border: 1px solid #d55959;
+      ;
     }
 
-    .table button:hover {
-      background: #599dd5;
+    .table a:hover {
+      background: #d55959;
       color: #fff;
       transition: 0.5rem;
     }
+
 
     footer {
       width: 100%;
@@ -193,6 +196,73 @@
       text-decoration: underline;
 
     }
+
+
+
+    .pup {
+      display: none;
+      position: absolute;
+      inset: 0px;
+      /* or position fixed;  top 0 left 0 width 100% hight 100% */
+      background-color: rgba(0, 0, 0, 0.75);
+      z-index: 1;
+
+
+    }
+
+    .modal {
+      display: block;
+      margin: auto;
+      width: 500px;
+      border: 1px solid rgb(255, 255, 255);
+      background-color: rgb(255, 255, 255);
+      color: rgb(26, 0, 110);
+      padding-top: 10px;
+      border-radius: 0px;
+    }
+
+    button {
+      display: inline;
+      margin: 0;
+    }
+
+
+    .bottons {
+      display: flex;
+      justify-content: end;
+    }
+
+    #close {
+      border-radius: 0px;
+      font-size: 15px;
+      width: -webkit-fill-available;
+      background: rgb(198, 198, 198);
+      box-shadow: -2px 2px 3px #6b6b6b;
+    }
+
+    .modal a {
+      text-decoration: none;
+      width: 100%;
+    }
+
+    #accept {
+      padding: 20px;
+      border-radius: 0px;
+      font-size: 15px;
+      width: -webkit-fill-available;
+      background-color: rgb(216 65 60);
+      color: #fff;
+      box-shadow: 0 2px 2px 1px rgb(130 39 36);
+    }
+
+
+    #accept:hover {
+      background-color: rgb(150, 6, 6);
+    }
+
+    #close:hover {
+      background-color: rgb(176, 176, 176);
+    }
   </style>
 </head>
 
@@ -203,30 +273,24 @@
       <div class="main-top">
         <h1> <strong>{{class_name}}</strong> Attendance Dashboard</h1>
       </div>
+      {% if delstudent %}
+
+      <h2 style="color: #d55959;"> Student {{delstudent}} Has been deleted from class</h2>
+      {% endif %}
       {% if students %}
       <div class="users">
 
         {% for student in students %}
-        {% if '43000000' not in student.student_id %}
+
         <div class="card">
           <img src="{{student.profilePic.url}}">
           <h4>{{student.name}}</h4>
           <p>Student</p>
           <div class="per">
-            <table>
-              <tr>
-                <td><span>5%</span></td>
-                <td><span>87%</span></td>
-              </tr>
-              <tr>
-                <td>Month</td>
-                <td>Year</td>
-              </tr>
-            </table>
+
           </div>
           <button>Profile</button>
         </div>
-        {% endif %}
         {% endfor %}
 
 
@@ -251,21 +315,46 @@
             <tbody>
 
               {% for student in students %}
-              {% if '43000000' not in student.student_id %}
               <tr>
                 <td>{{student.student_id}}</td>
                 <td>{{student.name}}</td>
                 <td>{{class_name}}</td>
-                <td>01-01-23</td>
+                <td>{{student.reg_date.year}}/{{student.reg_date.month}}/{{student.reg_date.day}}</td>
                 <td>8:00AM</td>
                 <td>3:00PM</td>
-                <td><button>View</button></td>
+                <td> <a href="{{student.name}}-{{student.student_id}}/Delete"> Delete</a></td>
               </tr>
-              {% endif %}
+
+              <!-- <div class="pup">
+
+
+                <div style="margin: auto;">
+                  <div class="modal">
+
+                    <h1>Delete Student</h1>
+
+                    <p style="margin-top: 40px; font-size: 18px; font-weight: 300; margin-bottom:40px ; color: #000; ">
+                      All Student's data will be deleted!</p>
+
+                    <div class="bottons">
+
+                      <button id="close" onclick="cancel()">Cancel</button>
+
+                      <a href="{{student.name}}-{{student.student_id}}/Delete">
+                        <button id="accept">Delete</button>
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+              </div> -->
+
               {% endfor %}
 
             </tbody>
           </table>
+
+
 
 
         </div>
@@ -282,6 +371,33 @@
     </section>
   </div>
 
+
+  <!-- <script>
+
+    const del = document.querySelector(".pup");
+    const body = document.querySelector('body');
+
+    function pop() {
+
+      del.style.display = "flex";
+      body.style.backgroundColor = " rgba(0, 0, 0,0.7)"
+      // html.style.opacity = ' 80%'
+
+    }
+
+    function Delete() {
+      del.style.display = "none";
+
+      console.log(`accepted`)
+    }
+
+    function cancel() {
+      del.style.display = "none";
+      console.log(`closed`)
+    }
+
+
+  </script> -->
 </body>
 
 </html>

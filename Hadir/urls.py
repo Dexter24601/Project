@@ -49,8 +49,12 @@ urlpatterns = [
     # http://localhost:8000/Hadir/math-103
 
     path('Hadir/Classes/<str:class_name>-<int:class_id>/Delete',
-         views.delete, name="delete"),
-    # http://localhost:8000/Hadir/math-103
+         views.deleteClass, name="deleteClass"),
+    # http://localhost:8000/Hadir/math-103/delete
+
+    path('Hadir/Classes/<str:class_name>-<int:class_id>/<str:name>-<int:student_id>/Delete',
+         views.deleteStudent, name="deleteStudent"),
+    # http://localhost:8000/Hadir/math-103/khalid-43901023/delete
 
 
     path('Hadir/Classes/<str:class_name>-<int:class_id>/Dashboard',

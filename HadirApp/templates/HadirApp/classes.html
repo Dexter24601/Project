@@ -78,76 +78,14 @@
             width: 60%;
         }
     }
-
-
-    .pup {
-        display: none;
-        position: absolute;
-        inset: 0px;
-        /* or position fixed;  top 0 left 0 width 100% hight 100% */
-        background-color: rgba(0, 0, 0, 0.75);
-        z-index: 1;
-
-
-    }
-
-    .modal {
-        display: block;
-        margin: auto;
-        width: 500px;
-        border: 1px solid rgb(255, 255, 255);
-        background-color: rgb(255, 255, 255);
-        color: rgb(26, 0, 110);
-        padding-top: 10px;
-        border-radius: 0px;
-    }
-
-    button {
-        display: inline;
-        margin: 0;
-    }
-
-
-    .bottons {
-        display: flex;
-        justify-content: end;
-    }
-
-    #close {
-        border-radius: 0px;
-        font-size: 15px;
-        width: -webkit-fill-available;
-        background: rgb(198, 198, 198);
-        box-shadow: -2px 2px 3px #6b6b6b;
-    }
-
-    .modal a {
-        text-decoration: none;
-        width: 100%;
-    }
-
-    #accept {
-        padding: 20px;
-        border-radius: 0px;
-        font-size: 15px;
-        width: -webkit-fill-available;
-        background-color: rgb(216 65 60);
-        color: #fff;
-        box-shadow: 0 2px 2px 1px rgb(130 39 36);
-    }
-
-
-    #accept:hover {
-        background-color: rgb(150, 6, 6);
-    }
-
-    #close:hover {
-        background-color: rgb(176, 176, 176);
-    }
 </style>
 <p>Welcome {{request.user}}</p> <br>
+{% if Delclass %}
+<h2>
+    class: {{Delclass}} Has been deleted succefuly
+</h2>
+{% endif %}
 {% if theClasses %}
-<div class="filter"></div>
 <table>
     <tr>
         <th>#</th>
@@ -158,40 +96,22 @@
         <th>status</th>
     </tr>
     {% for class in theClasses %}
-
     <tr>
         <td></td>
         <td class="view"><a href="Classes/{{class.class_name}}-{{class.class_id}}">{{class.class_name}}</a></td>
         <td>{{class.class_id}}</td>
         <td>{{class.num_of_students}}</td>
         <td>{{class.Creation_date.year}}/{{class.Creation_date.month}}/{{class.Creation_date.day}}</td>
-        <td onclick="pop()" class="delete">Delete</td>
+        <td> Active</td>
+        <!-- <td onclick="pop()" class="delete">
+            Classes/{{class.class_name}}-{{class.class_id}}/Delete
+        </td> -->
+        <!-- <a href="Classes/{{class.class_name}}-{{class.class_id}}/Delete"> Delete</a> -->
+        </td>
     </tr>
     </div>
 
-    <div class="pup">
 
-
-        <div style="margin: auto;">
-            <div class="modal">
-
-                <h1>Delete {{class}} class</h1>
-
-                <p style="margin-top: 40px; font-size: 18px; font-weight: 300; margin-bottom:40px ; color: #000; ">
-                    All the class content will be deleted!</p>
-
-                <div class="bottons">
-
-                    <button id="close" onclick="cancel()">Cancel</button>
-
-                    <a href="Classes/{{class.class_name}}-{{class.class_id}}/Delete">
-                        <button id="accept">Delete</button>
-                    </a>
-                </div>
-            </div>
-
-        </div>
-    </div>
 
     {% endfor %}
     {% endif %}
@@ -201,38 +121,39 @@
 <h1> {{err}}</h1>
 <h2><a href="Create_class">Create Class</a></h2>
 
-
-
-
-<!-- <script>
-const del = document.querySelector('.delete');
-del.onclick = Delete;
-
-function Delete(){
-    
-}
-</script> -->
 {% endif %}
-
-
-
 
 <script>
 
     const del = document.querySelector(".pup");
     const html = document.querySelector('html');
+    const deleteBtn = document.querySelector('.delete');
+    const wrapper = document.querySelector('.pup');
+    link = wrapper.querySelector('#link');
 
     function pop() {
 
-        del.style.display = "flex";
+        // del.style.display = "flex";
+        console.log(deleteBtn.innerText);
+        link.href = deleteBtn.innerText;
         // html.style.backgroundColor = " rgb(0, 0, 0)"
         // html.style.opacity = ' 80%'
 
     }
 
+
+    deleteBtn.addEventListener('load', () => {
+
+        del.style.display = "flex";
+        console.log(deleteBtn.innerText);
+        // link.href = deleteBtn.innerText;
+        // html.style.backgroundColor = " rgb(0, 0, 0)"
+        // html.style.opacity = ' 80%'
+
+    });
+
     function Delete() {
         del.style.display = "none";
-
         console.log(`accepted`)
     }
 
@@ -241,6 +162,11 @@ function Delete(){
         console.log(`closed`)
     }
 
+    // link.addEventListener('load', () => {
+
+    //     wrapper.classList.add("active");
+
+    // });
 
 </script>
 {% endblock %}
