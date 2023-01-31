@@ -1,0 +1,72 @@
+{% extends 'HadirApp/base.html'%}
+
+{% block main_content %}
+
+{% load static %}
+
+<head>
+    
+    <style>
+    body {
+        background: #ECF0F1 !important;
+        
+    }
+    #image{
+        margin: 20px 0 20px;
+        border: 1px dotted black;
+        height: 480px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    #image h1{
+        color: rgba(0, 0, 0, 0.4);
+    }
+    footer {
+        bottom: 0;
+    }
+    
+    </style>
+</head>
+
+<body>
+
+    <h1>{{class_name}}</h1>
+        <div class="container">
+            <h1> Insert a photo of the hall</h1>
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+            <div id="image">
+                <label for="date"></label>
+                <input type="text" name="id" id="">
+                <label for="file"><h1>add image from galary</h1></label>
+                    <input type="file" multiple="multiple" hidden name="images" id="file" accept="image/*" />
+                    </div>
+                    <button style="margin: auto;"type="submit" name="insert" id="insert">Insert</button>
+                </form>
+        </div> 
+
+
+        <script>
+            const create = document.getElementById("create");
+            // console.log('si senior');
+            
+            create.addEventListener('click',(event)=>{
+
+            const img = document.querySelector('#qr');
+            const numOfStudents = document.getElementById("numOfStudents").value;
+            console.log(numOfStudents);
+            img.style.opacity = "100";
+            });
+            
+            // function click() {
+           
+            // }
+        </script>
+</body>
+
+</html>
+
+{% endblock %}
