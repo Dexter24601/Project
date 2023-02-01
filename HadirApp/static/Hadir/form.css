@@ -160,6 +160,10 @@ form {
   cursor: pointer;
 }
 
+.choose:hover {
+  background-color: #7bbeea;
+}
+
 .material-symbols-outlined {
   background-color: #fff;
 }

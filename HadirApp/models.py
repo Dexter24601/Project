@@ -16,9 +16,11 @@ class Class(models.Model):
     class_id = models.CharField(primary_key=True, max_length=3, validators=[
                                 RegexValidator(r'\d{3}')])
     class_name = models.CharField(max_length=50)
-    # students = models.ForeignKey(Student, null=True)
-    # classImgs = models.FileField(max_length=300, null=True)
 
+    Creation_date = models.DateTimeField(
+        'date created',  auto_now_add=True)
+
+    classImgs = models.FileField(max_length=300, null=True)
     num_of_students = models.PositiveIntegerField(default=10)
     # present_students = models.
 
@@ -31,11 +33,11 @@ class Student(models.Model):
     student_id = models.CharField(
         primary_key=True, max_length=8, validators=[RegexValidator(r'^(4)(\d{7})$')])
 
-    student_absence = models.IntegerField(default=0)
     reg_date = models.DateTimeField('date registered',  auto_now_add=True)
     # null=True, on_delete=models.SET_NULL
     classes = models.ManyToManyField(Class)
     # precense = models.BooleanField(default=False)
+    profilePic = models.ImageField(null=True)
 
     def __str__(self):
         return self.name
@@ -43,10 +45,19 @@ class Student(models.Model):
 
 class Image(models.Model):
     img_id = models.AutoField(primary_key=True)
-    images = models.FileField(
-        max_length=300, null=True, default=None)
-    student = models.ForeignKey(Student, null=True, on_delete=models.SET_NULL)
+    images = models.ImageField(
+        null=True, default=None, upload_to='media/Students')
+    student = models.ForeignKey(Student, null=True, on_delete=models.CASCADE)
 # CASCADE: When the referenced object is deleted, also delete the objects that have references to it (when you remove a blog post for instance, you might want to delete comments as well). SQL equivalent: CASCADE.
+
+    def __str__(self):
+        return (f"{self.images.name}({self.student})")
+
+
+class Traning(models.Model):
+    img_id = models.AutoField(primary_key=True)
+    images = models.ImageField(
+        null=True, default=None, upload_to='media/Traning')
 
     def __str__(self):
         return self.images.name
@@ -58,7 +69,7 @@ class Attendance(models.Model):
 
     student = models.ManyToManyField(Student)
 
-    clas = models.ForeignKey(Class, null=True, on_delete=models.SET_NULL)
+    clas = models.ForeignKey(Class, null=True, on_delete=models.CASCADE)
 
     # img_taken = models.FileField()
 
@@ -81,6 +92,3 @@ class Absence(models.Model):
 
     def __str__(self):
         return (f"{self.student}-({self.clas})")
-
-
-# for tomorrow انه يكون لكل طالب غياب خاص بمادة

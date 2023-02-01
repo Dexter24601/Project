@@ -13,7 +13,7 @@
 
     <style>
         footer {
-            position: absolute;
+            position: fixed;
 
         }
 
@@ -33,9 +33,7 @@
                     <a class="nav-item" href="register">Register</a>
                     <a class="nav-item" href="login">Login</a>
 
-                    <!-- <span class=" bar">a</span>
-                        <span class="bar">b</span>
-                        <span class="bar">c</span> -->
+
 
                 </div>
                 <ul class="nav no-search">
@@ -49,10 +47,7 @@
             </nav>
         </div>
 
-        <!-- {{form.username.label}} -->
-        <!-- {{form.email.label}} -->
-        <!-- {{form.password1.label}} -->
-        <!-- {{form.password2.label}} -->
+
         <div id="container">
 
             <form id="log-form" action="register" method="POST">
@@ -61,37 +56,31 @@
                     <h1>
                         Register
                     </h1>
-                    <!-- <input class="input" type="email" placeholder="Email@example.com" minlength="3" required='required'
-                        name="email" id="email"> -->
-                    {{form.email.label}}
-                    {{form.email}}
+
+                    <input class="input" type="email" name="email" placeholder="{{form.email.label}}" required
+                        id="id_email">
 
                     {% if err %}
-                    <br>
-                    <span style="color: brown;" id="emailError">{{ err }} <a href="login">login?</a></span>
-                    <br>
+
+                    <span style="color: brown;" id="emailError">{{ err }}</span>
                     {% endif %}
 
-                    <!-- <input class="input" type="text" placeholder="username" autocomplete="off" name="username"
-                        id="username"> -->
-                    {{form.username.label}}
-                    {{form.username}}
+
+                    <input class="input" type="text" name="username" placeholder="{{form.username.label}}"
+                        maxlength="150" autofocus required id="id_username">
 
 
-                    <!-- <input class="input" type="password" placeholder="P@$$w0rd" title="6 char at least" maxlength="20"
-                        minlength="6" required='required' name="password" id="password"> -->
-                    {{form.password1.label}}
-                    {{form.password1}}
+                    <input class="input" type="password" name="password1" autocomplete="new-password"
+                        placeholder="{{form.password1.label}}" required id="id_password1">
 
 
-                    <!-- <input class="input" type="password" placeholder="Re enter P@$$w0rd" title="6 char at least"
-                        maxlength="20" minlength="6" required='required' name="password2" id="password2"> -->
-                    {{form.password2.label}}
-                    {{form.password2}}
+
+                    <input class="input" type="password" name="password2" placeholder="{{form.password2.label}}"
+                        autocomplete="new-password" required id="id_password2">
 
                     {% if err2 %}
 
-                    <span style="color: brown;" id="passError">{{ err2 }}</span>
+                    <span style="color: brown; width: fit-content;" id="passError">{{ err2 }}</span>
                     {% endif %}
 
                     <button id="subtn" type="submit" value="submit">Register</button>

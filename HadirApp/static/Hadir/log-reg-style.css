@@ -1,6 +1,7 @@
 html {
     scroll-behavior: smooth;
     height: 100%;
+    width: 100%;
     background-image: url('https://images.unsplash.com/photo-1435224668334-0f82ec57b605?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDd8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80');
     background-position: center;
     background-repeat: no-repeat;
@@ -11,23 +12,27 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+    /* padding-bottom: mac; */
 
 }
 
 .box {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: fit-content;
     height: fit-content;
     padding: 10px 65px;
     border: 1px solid #ffffff;
     background-color: #fff;
     align-items: center;
-    /* justify-content: center; */
     border-radius: 8px;
-    /* overflow: initial; */
-    margin-top: 70px;
+
 
 }
 
@@ -126,7 +131,7 @@ footer p span {
         flex-direction: column;
         justify-content: space-around;
         width: 320px;
-        height: 380px;
+        /* height: 380px; */
         padding: 10px;
         border: 1px solid #fff;
         background-color: #fff;
