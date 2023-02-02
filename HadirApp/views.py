@@ -450,9 +450,10 @@ def attendance(request, class_name, class_id):
                             print(absent.counter)
                             absent.counter = absent.counter + 1
                             print(absent.counter)
-                            absent.save()
+                            # absent.save()
                             absent.date.add(DATE)
                             absent.save()
+                            print(DATE)
                             print(f" Student {student} is Abcent")
                     else:
                         absent = Absence.objects.create(
@@ -496,7 +497,7 @@ def attendance(request, class_name, class_id):
 
         context = {'students': students,
                    'class_name': class_name, 'class_id': class_id}
-        return render(request, 'HadirApp/take_attendance.html', context)
+        return render(request, 'HadirApp/attendance.html', context)
     else:
         return redirect('/Hadir/404')
 
@@ -510,6 +511,8 @@ def attendanceResult(request, class_name, class_id):
 
         # to get all present students today
         day = Attendance.objects.filter(presence_date=today)
+        clas = Class.objects.get(class_id=class_id)
+        students = Student.objects.filter(classes=clas)
         for st in day:
             prestudents = st.student.all()
         # print(f' students: {prestudents}')
@@ -523,7 +526,7 @@ def attendanceResult(request, class_name, class_id):
     except Exception as e:
         print(e)
         return redirect('/Hadir/404')
-    return render(request, 'HadirApp/results.html', {'currentClass': currentClass, 'today': today, 'prestudents': prestudents, 'abcentStudents': abcentStudents})
+    return render(request, 'HadirApp/results.html', {'currentClass': currentClass, 'today': today, 'prestudents': prestudents, 'abcentStudents': abcentStudents, 'students': students})
 
 
 @login_required(login_url='/Hadir/login?next=/Hadir/Classes')

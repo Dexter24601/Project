@@ -47,7 +47,6 @@
     .main .users {
       display: flex;
       justify-content: center;
-
       width: 100%;
       overflow: auto;
       white-space: nowrap;
@@ -337,30 +336,6 @@
                 <td> <a href="{{student.name}}-{{student.student_id}}/Delete"> Delete</a></td>
               </tr>
 
-              <!-- <div class="pup">
-
-
-                <div style="margin: auto;">
-                  <div class="modal">
-
-                    <h1>Delete Student</h1>
-
-                    <p style="margin-top: 40px; font-size: 18px; font-weight: 300; margin-bottom:40px ; color: #000; ">
-                      All Student's data will be deleted!</p>
-
-                    <div class="bottons">
-
-                      <button id="close" onclick="cancel()">Cancel</button>
-
-                      <a href="{{student.name}}-{{student.student_id}}/Delete">
-                        <button id="accept">Delete</button>
-                      </a>
-                    </div>
-                  </div>
-
-                </div>
-              </div> -->
-
               {% endfor %}
 
             </tbody>
@@ -384,32 +359,6 @@
   </div>
 
 
-  <!-- <script>
-
-    const del = document.querySelector(".pup");
-    const body = document.querySelector('body');
-
-    function pop() {
-
-      del.style.display = "flex";
-      body.style.backgroundColor = " rgba(0, 0, 0,0.7)"
-      // html.style.opacity = ' 80%'
-
-    }
-
-    function Delete() {
-      del.style.display = "none";
-
-      console.log(`accepted`)
-    }
-
-    function cancel() {
-      del.style.display = "none";
-      console.log(`closed`)
-    }
-
-
-  </script> -->
 </body>
 
 </html>
