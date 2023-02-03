@@ -29,7 +29,7 @@ class Class(models.Model):
 
 
 class Student(models.Model):
-    name = models.CharField(max_length=60, unique=True)
+    name = models.CharField(max_length=60)
     student_id = models.CharField(
         primary_key=True, max_length=8, validators=[RegexValidator(r'^(4)(\d{7})$')])
 

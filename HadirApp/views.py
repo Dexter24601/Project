@@ -160,11 +160,6 @@ def student_enrollment(request, class_name, class_id):
                     print(idErr)
                     return render(request, 'HadirApp/student_enrollment.html', {'idErr': idErr, 'class_name': class_name})
 
-                elif Student.objects.filter(name=name).exists():
-                    nameErr = 'There exists a Student with this Name but with deffernt ID.'
-                    print(nameErr)
-                    return render(request, 'HadirApp/student_enrollment.html', {'idErr': nameErr, 'class_name': class_name})
-
                 elif not match:
                     wrongID = 'Invalid Student ID!'
                     print(wrongID)
