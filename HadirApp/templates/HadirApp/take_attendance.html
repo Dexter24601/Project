@@ -143,10 +143,8 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% for student in students%}
-                    {% if '43000000' not in student.student_id %}
                     <label for="{{student}}">{{student}}</label>
                     <input type="checkbox" name="student" value="{{student}}">
-                    {% endif %}
                     {% endfor%}
                     </select>
 

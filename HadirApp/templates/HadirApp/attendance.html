@@ -78,11 +78,11 @@
     <div class="container">
         <h1> Insert a photo of the hall</h1>
             
-            <form action="" method="POST">
+            <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
             <div id="image">
                 <label for="file"><h1>add image from galary <i class="fa-solid fa-users"></i></h1></label>
-                    <input type="file" multiple="multiple" hidden name="images" id="file" accept="image/*" />
+                    <input type="file" multiple="multiple" hidden name="Images" id="file" accept="image/*" />
                     </div>
                     <button style="margin: auto;"type="submit" name="insert" id="insert">Insert</button>
                 </form>

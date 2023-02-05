@@ -19,3 +19,4 @@ torchvision==0.14.1
 seaborn~=0.12.2
 tqdm~=4.64.1
 thop~=0.1.1.post2209072238
+scipy==1.10.0

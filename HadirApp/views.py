@@ -14,6 +14,8 @@ from datetime import date
 
 
 import PIL.Image
+
+from LDA_TEST import *
 from RecognitionSystem.FaceDetection import *
 from RecognitionSystem.FaceRecognition import *
 
@@ -170,21 +172,27 @@ def student_enrollment(request, class_name, class_id):
                     print(ImgErr)
                     return render(request, 'HadirApp/student_enrollment.html', {'Err': ImgErr, 'class_name': class_name})
 
-                FolderToSave = resource_path('RecognitionSystem/Processing/')
-                n = 0
+                ProcessingPath = resource_path('RecognitionSystem/Processing/')
+                DeleteFolderIfExist(ProcessingPath)
+
+                n = 1
                 for image in images:
                     X = PIL.Image.open(image)
-                    X.save(f'{FolderToSave}{n}({name}).jpg')
+                    X.save(f'{ProcessingPath}/{n}.jpg')
                     n += 1
 
+                std_path = resource_path(
+                    f'HadirApp/media/Students/{student_id}/')
+                DeleteFolderIfExist(std_path)
+
                 # Detect Submitted Faces
-                ImgsNames = DetectFaces(
-                    PostProccessing=True, ImagePath=FolderToSave)
+                ImgsNames = DetectFaces(ImgSize=(416, 416), ImagePath=ProcessingPath, ConfidenceThreshold=0.80,
+                                        std_id=student_id,  Save_noBG=True, Save_cropped=True, pad=0, gain=1.01)
 
                 # If we didn't detect any face -> try with less confidence
                 if len(ImgsNames) < 1:
-                    ImgsNames = DetectFaces(
-                        PostProccessing=True, ImagePath=FolderToSave, ConfidenceThreshold=0.64)
+                    ImgsNames = DetectFaces(ImgSize=(800, 800), ImagePath=ProcessingPath,
+                                            ConfidenceThreshold=0.8, std_id=student_id, Save_noBG=True, Save_cropped=True)
 
                 # if we got detection
                 if len(ImgsNames) >= 1:
@@ -199,8 +207,6 @@ def student_enrollment(request, class_name, class_id):
                     for im in ImgsNames:
                         Image.objects.create(
                             student=student, images=(f'Students/{im}'))
-
-                    DeleteFolderIfExist(FolderToSave)  # why?
 
                     messages.success(
                         request, f'Student {name} has been added to {classes.class_name} class succesfuly')
@@ -388,11 +394,13 @@ def attendance(request, class_name, class_id):
                     X = PIL.Image.open(image)
                     X.save(f'{FolderToSave}{n}.jpg')
                     n += 1
-                DetectFaces(PostProccessing=False, ImagePath=FolderToSave,
-                            ConfidenceThreshold=0.65)
-                students_ids = Recognize(students)
+
+                DetectFaces(ImgSize=(1024, 1024), ImagePath=FolderToSave, ConfidenceThreshold=0.8,
+                            Save=False,  Save_noBG=False, Save_cropped=True, pad=0, gain=1.01)
+
                 print(
-                    f'Recognized students: {Student.objects.get(student_id=students_ids[0])}')
+                    f'Type of Students {type(students)} and its values are {students}')
+                students_ids = Recognize_LDA(students)
 
                 for id in students_ids:
                     if Student.objects.filter(student_id=id, classes=currentClass).exists():
@@ -567,9 +575,27 @@ def traning(request):
     if request.method == "POST":
         images = request.FILES.getlist('images')
 
+        FolderToSave_Training = resource_path('HadirApp/media/Students')
+        FolderToSave_Processing = resource_path(
+            'RecognitionSystem/Processing/')
+
+        DeleteFolderIfExist(FolderToSave_Processing)
+
+        if os.path.exists(f'{FolderToSave_Training}/99999999') is False:
+            os.makedirs(f'{FolderToSave_Training}/99999999')
+        else:
+            DeleteFolderIfExist(f'{FolderToSave_Training}/99999999')
+            # os.makedirs(f'{FolderToSave_Training}/99999999')
+
         for img in images:
-            image = Traning.objects.create(images=(f'Traning/{img}'))
-            image.save()
+            i = PIL.Image.open(img)
+            i.save(
+                f'{FolderToSave_Processing}{len(os.listdir(FolderToSave_Processing))}.png')
+
+        n = len(os.listdir(FolderToSave_Training))
+        DetectionFilesName = DetectFaces(ImgSize=(96, 96), ImagePath=FolderToSave_Processing, ConfidenceThreshold=0.8,
+                                         MediaPath=FolderToSave_Training, std_id='99999999',  Save_noBG=False, Save_cropped=True, pad=0, gain=1.5)
+
         print('Traning set added succesfuly')
     return render(request, 'HadirApp/Traning.html')
 
