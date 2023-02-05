@@ -38,8 +38,8 @@
                     <!-- <li class="nav-item"><a href="#">Home</a></li> -->
                     <!-- <li class="nav-item"><a href="#">Contact Us</a></li> -->
                     {% if user.is_authenticated %}
-                    <a class="nav-item" id="main" href="/Hadir/main">Main</a>
-                    <a class="nav-item" id="username">{{user.username}}</a>
+                    <a class="nav-item" id="main" href="/Hadir/main">Main <i class="fa-solid fa-house"></i></a>
+                    <a class="nav-item" id="username">{{user.username}} <i class="fa-solid fa-user"></i></a>
                     <a class="nav-item" href="/Hadir/logout">Logout <i style="margin-left: 2px;"
                             class="fa-solid fa-arrow-right-from-bracket"></i>
                     </a>
@@ -59,7 +59,7 @@
             <footer>
 
                 <p> ©2022
-                    Capstone project section (198), All Rights Reserved
+                    Capstone project section (537), All Rights Reserved
                 </p>
             </footer>
 

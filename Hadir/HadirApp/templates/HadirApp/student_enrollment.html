@@ -19,7 +19,8 @@
 
 <style>
     footer {
-        bottom: auto;
+        position: fixed;
+        bottom: 0;
     }
 </style>
 
@@ -35,6 +36,10 @@
                 <label id="label-name" for="name">Name</label>
                 <input type="text" name="name" id="name" class="form-control" placeholder="Enter Your Full Name"
                     required="required" maxlength="50" />
+                {% if nameErr %}
+                <p style="color: brown;">{{nameErr}}</p>
+                {% endif %}
+
             </div>
 
             <div class="form-group">
@@ -50,21 +55,8 @@
                 {% endif %}
 
             </div>
-            <!-- <div class="form-group">
-                <label id="number-label" for="text">Classes<span class="clue">(Subjects)</span></label>
-                <span style="color: rgb(99, 99, 99); font-size: 14px;">math-101</span> <input type="checkbox"
-                    name="class" value='math-101' /> <br>
-                <span style="color: rgb(99, 99, 99); font-size: 14px;">physics-102</span> <input type="checkbox"
-                    name="class" value='physics-102' /><br>
-                <span style="color: rgb(99, 99, 99); font-size: 14px;">Database fundamentals-222</span> <input
-                    type="checkbox" name="class" value='Database fundamentals-222' />
-
-            </div> -->
-
             <div class="form-group">
-
-                <label for="file">Face Photos<span class="clue">(10 images at
-                        least)</span></label>
+                <label for="file">Face Photos<span class="clue"> (clear face photo . 400x400 suggested) </span></label>
                 <input type="file" multiple="multiple" hidden name="images" id="file" accept="image/*" />
                 <label for="file" class="choose"><span class="material-symbols-outlined">image</span>choose
                     image</label>
@@ -77,8 +69,13 @@
                 </button>
             </div>
             {% for message in messages %}
+
             <p style="color: lightgreen;">{{message}}</p>
+
             {% endfor %}
+            {% if Err %}
+            <p style="color: #c10707;">{{Err}}</p>
+            {% endif %}
         </form>
     </div>
 

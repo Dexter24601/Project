@@ -50,9 +50,23 @@ urlpatterns = [
     path('Hadir/Classes/<str:class_name>-<int:class_id>', views.clas, name="clas"),
     # http://localhost:8000/Hadir/math-103
 
+    path('Hadir/Classes/<str:class_name>-<int:class_id>/Delete',
+         views.deleteClass, name="deleteClass"),
+    # http://localhost:8000/Hadir/math-103/delete
+
+    path('Hadir/Classes/<str:class_name>-<int:class_id>/<str:name>-<int:student_id>/Delete',
+         views.deleteStudent, name="deleteStudent"),
+    # http://localhost:8000/Hadir/math-103/khalid-43901023/delete
+
+
     path('Hadir/Classes/<str:class_name>-<int:class_id>/Dashboard',
          views.dashboard, name="dashboard"),
     # http://localhost:8000/Hadir/Dashboard
+
+    path('Hadir/Classes/<str:class_name>-<int:class_id>/<str:name>-<int:student_id>',
+         views.profile, name="profile"),
+    # http://localhost:8000/Hadir/Marwan%20Saleh%20Algamdi
+
 
     path('Hadir/Classes/<str:class_name>-<int:class_id>/Attendance',
          views.attendance, name="attendance"),
@@ -66,6 +80,10 @@ urlpatterns = [
 
     path('Hadir/images', views.images, name='images'),
     # http://localhost:8000/Hadir/images
+
+    path('Hadir/Traning', views.traning, name='traning'),
+    # http://localhost:8000/Hadir/Traning
+
 
     path('Hadir/register', views.registerPage, name="registerPage"),
     # http://localhost:8000/Hadir/register
@@ -85,10 +103,10 @@ urlpatterns = [
          auth_views.PasswordResetDoneView.as_view(template_name='HadirApp/password_reset_sent.html'), name="password_reset_done"),
 
     path('Hadir/reset_password/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+         auth_views.PasswordResetConfirmView.as_view(template_name='HadirApp/reset_password.html'), name="password_reset_confirm"),
 
     path('Hadir/reset_password_complete/',
-         auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
+         auth_views.PasswordResetCompleteView.as_view(template_name='HadirApp/reset_password_complete.html'), name="password_reset_complete"),
 
 
     path('Hadir/main', views.mainPage, name="mainPage"),

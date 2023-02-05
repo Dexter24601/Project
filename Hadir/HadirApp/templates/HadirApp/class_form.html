@@ -6,11 +6,34 @@
 <body>
     <style>
         footer {
-            bottom: auto;
+            width: 100%;
+            float: inline-end;
+            position: fixed;
+
         }
+
+        /* footer {
+            bottom: auto;
+        } */
 
         .nav-wrapper {
             min-height: 100vh;
+        }
+
+        .qrImg {
+            width: fit-content;
+            margin: 5% 0;
+        }
+
+
+
+        @media only screen and (max-width:720px) {
+
+            .form {
+                width: 70%;
+            }
+
+
         }
     </style>
     <div class="container">
@@ -19,6 +42,7 @@
 
             <form class="form" action="Create_class" method="POST">
                 {% csrf_token %}
+                <div id="container"></div>
                 <label for="">Section ID</label>
                 <input type="text" id="classID" name="classID" maxlength="3" required="required">
 

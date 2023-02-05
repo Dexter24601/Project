@@ -31,6 +31,7 @@ h2 {
     margin-bottom: 10px;
 }
 
+
 /* BASIC SETUP */
 
 .page-wrapper {
@@ -41,12 +42,8 @@ h2 {
 .nav-wrapper {
     width: 100%;
     position: -webkit-sticky;
-    /* Safari */
-    /* position: sticky; */
-    /* top: 0; */
     background-color: #fff;
     min-height: 100vh;
-    /* position: relative; */
 }
 
 
@@ -279,6 +276,29 @@ input {
 
 
 @media only screen and (max-width: 720px) {
+
+    .nav-wrapper {
+
+        /* width: fit-content; */
+        /* min-height: fit-content; */
+        /* min-height: 145vh; */
+
+    }
+
+    #main {
+
+        right: auto;
+    }
+
+    html {
+        min-height: 599px;
+    }
+
+    tbody {
+        margin-top: 30% !important;
+        width: 40vw;
+    }
+
     .features {
         flex-direction: column;
         padding: 50px;
@@ -364,7 +384,7 @@ input {
 
 footer {
     width: 100%;
-    position: absolute;
+    /* position: absolute; */
     bottom: 0;
     padding: 10px 0 10px 0;
     font-family: Arial, Helvetica, sans-serif;

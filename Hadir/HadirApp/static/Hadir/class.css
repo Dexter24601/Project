@@ -1,6 +1,7 @@
 html {
     scroll-behavior: smooth;
     height: 100%;
+    width: 100%;
     background: #eef0ef;
     background-position: center;
     background-repeat: no-repeat;
