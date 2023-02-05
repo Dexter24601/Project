@@ -10,47 +10,12 @@
 
 <style>
     footer {
-        bottom: auto;
+        width: 100%;
+        float: inline-end;
+        position: fixed;
+
     }
-</style>
 
-<body>
-    <div class="container">
-        <div class="title">
-            <h1> {{class_name}}-{{class_id}} Attendance Page</h1>
-        </div>
-        <div class="main">
-
-            <!-- <div class="date">
-                <p>Date</p>
-                <input type="date" placeholder="DD/MM/YYYY">
-            </div> -->
-            <div>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    {% for student in students%}
-                    <label for="{{student}}">{{student}}</label>
-                    <input type="checkbox" name="student" value="{{student}}">
-                    {% endfor%}
-                    </select>
-            </div>
-            <!-- <div class="class-img">
-                <p>Upload class image</p>
-                <input type="file" multiple="multiple" name="images" id="file" accept="image/*" />
-                <label for="file" class="choose"><span class="material-symbols-outlined">image</span>choose
-                    image</label>
-
-            </div> -->
-            <div>
-                <input type="submit" value="submit" class="click">
-            </div>
-            </form>
-        </div>
-    </div>
-</body>
-
-</html>
-<style>
     .container {
         background-color: whitesmoke;
         width: 70%;
@@ -151,5 +116,63 @@
             font-size: 20px;
         }
     }
+
+    #empty {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    #empty a {
+        text-decoration: underline;
+
+    }
 </style>
+
+<body>
+
+    <!-- <div class="container"> -->
+    <div class="page">
+        <div class="title">
+            <h1> {{class_name}}-{{class_id}} Attendance Page</h1>
+        </div>
+        {% if students %}
+
+        <div class="main">
+            <div>
+
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for student in students%}
+                    <label for="{{student}}">{{student}}</label>
+                    <input type="checkbox" name="student" value="{{student}}">
+                    {% endfor%}
+                    </select>
+
+                    <div class="form-group">
+                        <label for="file">Face Photos<span class="clue"></span></label>
+                        <input type="file" multiple="multiple" hidden name="Images" id="file" accept="image/*" />
+                    </div>
+
+                    <div>
+                        <input type="submit" value="submit" class="click">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        {% else %}
+
+        <div id="empty">
+
+            <h2>No students in this class</h2>
+            <a href="/Hadir/student_enrollment/{{class_name}}-{{class_id}}">Add students</a>
+
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>
+
 {% endblock %}

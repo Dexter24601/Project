@@ -2,39 +2,23 @@
 
 {% block main_content %}
 
-<p>Welcome {{request.user}}</p> <br>
-{% if theClasses %}
-<div class="filter"></div>
-<table>
-    <tr>
-        <th>#</th>
-        <th>class</th>
-        <th>Class_id</th>
-        <th>students</th>
-        <th>date</th>
-        <th>view</th>
-    </tr>
-    {% for class in theClasses %}
-
-    <tr>
-        <td></td>
-        <td>{{class.class_name}}</td>
-        <td>{{class.class_id}}</td>
-        <td>{{class.num_of_students}}</td>
-        <td>18 Nov 1962</td>
-        <td class="view"><a href="Classes/{{class.class_name}}-{{class.class_id}}">{{class}}</a></td>
-    </tr>
-    </div>
-    {% endfor %}
-    {% endif %}
-</table>
-{% if err %}
-
-<h1> {{err}}</h1>
-<h2><a href="Create_class">Create Class</a></h2>
-
-{% endif %}
 <style>
+    footer {
+        width: 100%;
+        float: inline-end;
+        position: fixed;
+
+    }
+
+    .delete {
+        color: rgb(187, 35, 35);
+        text-decoration: none;
+        align-items: center;
+        padding-top: 3%;
+        user-select: none;
+        cursor: pointer;
+    }
+
     p {
         color: #2175ba;
         font-size: 30px;
@@ -77,12 +61,13 @@
         background-color: #eeeeee;
     }
 
-    table td a {
+    .view a {
         color: #2175ba;
         text-decoration: none;
         align-items: center;
         padding-top: 3%;
     }
+
 
     @media(max-width:599px) {
         table {
@@ -93,6 +78,105 @@
         tr {
             width: 60%;
         }
+
+        td,
+        th {
+            padding: 14px 3px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
     }
 </style>
+<p>Welcome {{request.user}}</p> <br>
+{% if Delclass %}
+<h2>
+    class: {{Delclass.name}} Has been deleted succefuly
+</h2>
+{% endif %}
+{% if theClasses %}
+<table>
+    <tr>
+        <th>#</th>
+        <th>class</th>
+        <th>Class_id</th>
+        <th>students</th>
+        <th>date</th>
+        <th>status</th>
+    </tr>
+    {% for class in theClasses %}
+    <tr>
+        <td></td>
+        <td class="view"><a href="Classes/{{class.class_name}}-{{class.class_id}}">{{class.class_name}}</a></td>
+        <td>{{class.class_id}}</td>
+        <td>{{class.num_of_students}}</td>
+        <td>{{class.Creation_date.year}}/{{class.Creation_date.month}}/{{class.Creation_date.day}}</td>
+        <td> Active</td>
+        <!-- <td onclick="pop()" class="delete">
+            Classes/{{class.class_name}}-{{class.class_id}}/Delete
+        </td> -->
+        <!-- <a href="Classes/{{class.class_name}}-{{class.class_id}}/Delete"> Delete</a> -->
+        </td>
+    </tr>
+    </div>
+
+
+
+    {% endfor %}
+    {% endif %}
+</table>
+{% if err %}
+
+<h1> {{err}}</h1>
+<h2><a href="Create_class">Create Class</a></h2>
+
+{% endif %}
+
+<script>
+
+    const del = document.querySelector(".pup");
+    const html = document.querySelector('html');
+    const deleteBtn = document.querySelector('.delete');
+    const wrapper = document.querySelector('.pup');
+    link = wrapper.querySelector('#link');
+
+    function pop() {
+
+        // del.style.display = "flex";
+        console.log(deleteBtn.innerText);
+        link.href = deleteBtn.innerText;
+        // html.style.backgroundColor = " rgb(0, 0, 0)"
+        // html.style.opacity = ' 80%'
+
+    }
+
+
+    deleteBtn.addEventListener('load', () => {
+
+        del.style.display = "flex";
+        console.log(deleteBtn.innerText);
+        // link.href = deleteBtn.innerText;
+        // html.style.backgroundColor = " rgb(0, 0, 0)"
+        // html.style.opacity = ' 80%'
+
+    });
+
+    function Delete() {
+        del.style.display = "none";
+        console.log(`accepted`)
+    }
+
+    function cancel() {
+        del.style.display = "none";
+        console.log(`closed`)
+    }
+
+    // link.addEventListener('load', () => {
+
+    //     wrapper.classList.add("active");
+
+    // });
+
+</script>
+
+
 {% endblock %}

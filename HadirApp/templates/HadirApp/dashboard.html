@@ -23,9 +23,6 @@
       font-family: "Poppins", sans-serif;
     }
 
-    body {
-      background: #fff;
-    }
 
 
     .container {
@@ -49,25 +46,31 @@
 
     .main .users {
       display: flex;
+      justify-content: center;
       width: 100%;
       overflow: auto;
       white-space: nowrap;
     }
 
     .users .card {
-      width: 25%;
       margin: 15px;
       background: #fff;
       text-align: center;
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 3px 10px rgb(0 0 0 /0.3);
+      min-width: 250px;
+    }
+
+    .card h4 {
+      margin-top: 10px;
     }
 
     .users .card img {
       width: 70px;
       height: 70px;
       border-radius: 50%;
+      user-select: none;
     }
 
     .users .card h3 {
@@ -92,24 +95,31 @@
 
     .users td {
       font-size: 14px;
-      padding-right: 15px;
+      padding: 5px;
+
     }
 
-    .users .card button {
+    .users .card a {
+      display: flex;
+      margin-top: 15px;
+      justify-content: center;
       width: 100%;
       margin-top: 8px;
-      padding: 7px;
+      padding: 10px 25px;
       cursor: pointer;
       border-radius: 10px;
       color: #599dd5;
       background: transparent;
       border: 1px solid #599dd5;
+      user-select: none;
+      font-size: 20px;
+      font-weight: 500;
     }
 
-    .users .card button:hover {
+    .users .card a:hover {
       background: #599dd5;
       color: #fff;
-      transition: 0.5s;
+      transition: 0.25s;
     }
 
     /*Attendance List serction  */
@@ -119,7 +129,7 @@
     }
 
     .attendance-list {
-      width: 100%;
+      /* width: fit-content; */
       padding: 20px;
       margin-top: 10px;
       background: #fff;
@@ -146,7 +156,7 @@
 
     .table th,
     .table td {
-      padding: 12px 15px;
+      padding: 25px 15px;
     }
 
     .table tbody tr {
@@ -161,23 +171,123 @@
       border-bottom: 2px solid #599dd5;
     }
 
-    .table button {
+    .table a {
       padding: 6px 20px;
       border-radius: 10px;
       cursor: pointer;
-      color: #599dd5;
+      color: #d55959;
       background: transparent;
-      border: 1px solid #599dd5;
+      border: 1px solid #d55959;
+      ;
     }
 
-    .table button:hover {
-      background: #599dd5;
+    .table a:hover {
+      background: #d55959;
       color: #fff;
       transition: 0.5rem;
     }
 
+
     footer {
-      bottom: auto;
+      width: 100%;
+      float: inline-end;
+      position: fixed;
+
+    }
+
+    #empty {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    #empty a {
+      text-decoration: underline;
+
+    }
+
+
+
+    .pup {
+      display: none;
+      position: absolute;
+      inset: 0px;
+      /* or position fixed;  top 0 left 0 width 100% hight 100% */
+      background-color: rgba(0, 0, 0, 0.75);
+      z-index: 1;
+
+
+    }
+
+    .modal {
+      display: block;
+      margin: auto;
+      width: 500px;
+      border: 1px solid rgb(255, 255, 255);
+      background-color: rgb(255, 255, 255);
+      color: rgb(26, 0, 110);
+      padding-top: 10px;
+      border-radius: 0px;
+    }
+
+    button {
+      display: inline;
+      margin: 0;
+    }
+
+
+    .bottons {
+      display: flex;
+      justify-content: end;
+    }
+
+    #close {
+      border-radius: 0px;
+      font-size: 15px;
+      width: -webkit-fill-available;
+      background: rgb(198, 198, 198);
+      box-shadow: -2px 2px 3px #6b6b6b;
+    }
+
+    .modal a {
+      text-decoration: none;
+      width: 100%;
+    }
+
+    #accept {
+      padding: 20px;
+      border-radius: 0px;
+      font-size: 15px;
+      width: -webkit-fill-available;
+      background-color: rgb(216 65 60);
+      color: #fff;
+      box-shadow: 0 2px 2px 1px rgb(130 39 36);
+    }
+
+
+    #accept:hover {
+      background-color: rgb(150, 6, 6);
+    }
+
+    #close:hover {
+      background-color: rgb(176, 176, 176);
+    }
+
+
+
+
+    @media only screen and (max-width:720px) {
+
+      .main .users {
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .table th,
+      .table td {
+        padding: 10px 1%;
+        text-align: center;
+        font-size: 10px;
+      }
     }
   </style>
 </head>
@@ -189,26 +299,26 @@
       <div class="main-top">
         <h1> <strong>{{class_name}}</strong> Attendance Dashboard</h1>
       </div>
+
+
+      {% if delstudent %}
+
+      <h2 style="color: #d55959;"> Student {{delstudent}} Has been deleted from class</h2>
+      {% endif %}
+
+      {% if students %}
       <div class="users">
 
         {% for student in students %}
+
         <div class="card">
-          <img src="{% static 'Hadir/media/ibra.jpg' %}">
+          <img src="{{student.profilePic.url}}">
           <h4>{{student.name}}</h4>
           <p>Student</p>
           <div class="per">
-            <table>
-              <tr>
-                <td><span>85%</span></td>
-                <td><span>87%</span></td>
-              </tr>
-              <tr>
-                <td>Month</td>
-                <td>Year</td>
-              </tr>
-            </table>
+
           </div>
-          <button>Profile</button>
+          <a href="/Hadir/Classes/{{class_name}}-{{class_id}}/{{student.name}}-{{student.student_id}}">Profile</a>
         </div>
         {% endfor %}
 
@@ -226,7 +336,7 @@
                 <th>Student Name</th>
                 <th>Course</th>
                 <th>Date</th>
-                <th>Login Time</th>
+                <th>Time</th>
                 <th>Status</th>
                 <th>Details</th>
               </tr>
@@ -238,21 +348,34 @@
                 <td>{{student.student_id}}</td>
                 <td>{{student.name}}</td>
                 <td>{{class_name}}</td>
-                <td>01-01-23</td>
-                <td>8:00AM</td>
+                <td>{{student.reg_date.year}}/{{student.reg_date.month}}/{{student.reg_date.day}}</td>
+                <td>{{student.reg_date.time}}</td>
                 <td>3:00PM</td>
-                <td><button>View</button></td>
+                <td> <a href="{{student.name}}-{{student.student_id}}/Delete"> Delete</a></td>
               </tr>
+
               {% endfor %}
 
             </tbody>
           </table>
 
 
+
+
         </div>
+
+        {% else %}
+        <div id="empty">
+
+          <h2>No students in this class</h2>
+          <a href="/Hadir/student_enrollment/{{class_name}}-{{class_id}}">Add students</a>
+
+        </div>
+        {% endif %}
       </section>
     </section>
   </div>
+
 
 </body>
 

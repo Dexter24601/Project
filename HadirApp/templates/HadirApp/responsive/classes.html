@@ -1,0 +1,80 @@
+{% extends 'HadirApp/base.html' %}
+
+{% block main_content %}
+
+<p>Welcome {{request.user}}</p> <br>
+{% if theClasses %}
+<div class="filter"></div>
+<table id="count">
+    <tr> <th>#</th> <th>class</th> <th>Class_id</th> <th>students</th> <th>date</th> <th>view</th> </tr>
+{% for class in theClasses %}
+    
+            <tr> <td></td> <td>{{class.class_name}}</td> <td>{{class.class_id}}</td> <td>180</td> <td>18 Nov 1962</td> <td class="view"><a href="Classes/{{class.class_name}}-{{class.class_id}}">{{class}}</a></td> </tr>
+    </div>
+    {% endfor %}
+    {% endif %}
+</table>
+{% if err %}
+
+<h1> {{err}}</h1>
+<h2><a href="Create_class">Create Class</a></h2>
+
+{% endif %}
+<style>
+    p{
+        color: #2175ba;
+        font-size: 30px;
+        font-weight: 700;
+    }
+    table{
+
+        width: 60%; 
+        border-collapse: collapse;
+        border-spacing: 0;
+        box-shadow: 0 2px 15px rgba(64,64,64,.7);
+        border-radius: 12px 12px 0 0;
+        overflow: hidden;
+        margin: 5% auto;
+
+    }
+    td , th{
+    padding: 20px 20px;
+    text-align: center;
+    }
+
+    th{
+    background-color: #2175ba;
+    color: #fafafa;
+    font-family: 'Open Sans',Sans-serif;
+    font-weight: 200;
+    text-transform: uppercase;
+    }
+    
+    tr{
+    width: 100%;
+    background-color: #fafafa;
+    font-family: 'Montserrat', sans-serif;
+    }
+    
+    tr:nth-child(even){
+    background-color: #eeeeee;
+}
+table td a {
+    color: #2175ba;
+    text-decoration: none;
+    align-items: center;
+    padding-top: 3%;
+}
+@media(max-width:599px)
+{
+    table{
+        width: 40%;
+
+    }
+    tr{
+        width: 60%;
+    }
+}
+</style>
+{% endblock %}
+
