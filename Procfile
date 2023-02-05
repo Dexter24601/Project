@@ -1,1 +1,1 @@
-web: gunicorn Hadir.wsgi:application --log-file - 
+web: gunicorn HadirApp.wsgi:application --log-file - 
